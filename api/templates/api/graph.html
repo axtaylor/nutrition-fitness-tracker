@@ -1,0 +1,44 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="system_header large">
+    <h1>Nutrition Fitness Tracker</h1>
+</div>
+{% if not data %}
+<div class="no-data no_profile">
+    {% load static %}
+    <img class="big_logo" src="{% static '/images/ntf.png' %}">
+    <h2>Welcome to Nutrition Fitness Tracker</h2>
+    <p>Add entries to view charts</p>
+</div>
+{% else %}
+<div class="graph_container">
+    <div class="chart">
+        <h2 id="chart_header"></h2>
+        <hr>
+        <canvas id="weight_chart"></canvas>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+        {{ data|json_script:"chart_data" }}
+        <script type="text/javascript" src="{% static 'scripts/chart.js' %}"></script>
+        <div class="chart_footer">
+            <div class="chartbuttons">
+                <button>1Y</button>
+                <button>1M</button>
+                <button>1W</button>  
+            </div>
+            <div class="change_graph">
+                <select id="data-selector">
+                    <option value="weight">Weight</option>
+                    <option value="bodyfat">Body Fat %</option>
+                    <option value="lean_mass">Lean Mass</option>
+                    <option value="fat_mass">Fat Mass</option>
+                    <option value="calories">Calories</option>
+                    <option value="protein">Protein</option>
+                    <option value="carbs">Carbs</option>
+                    <option value="fat">Fat</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}

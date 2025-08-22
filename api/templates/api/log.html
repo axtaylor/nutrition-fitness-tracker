@@ -1,0 +1,60 @@
+{% extends 'main.html' %}
+{% block content %}
+{% if has_user_profile %}
+    <div class="system_header">
+        <h2>
+            {% if type == 'nutrition' %}Nutrition Log
+            {% elif type == 'composition' %}Composition Log  
+            {% elif type == 'training' %}Training Log
+            {% else %}Weight Log
+            {% endif %}
+            {% if guest %}
+             - Read Only
+            {% endif %}
+        </h2>
+        <a class='custom_button_add' href="{% url 'add'|add:type|add:'log' %}">
+           <p>+</p>
+        </a>
+    </div>
+    <div class="log_dashboard">
+        {% for entry in logbook %}
+            <div class="log_entries">
+                <span class="log_info">
+                    <h2>{{entry.date}}</h2>
+                    <ul>
+                        {% if type == 'nutrition' %}
+                            <li>Calories: {{entry.calories}}</li>
+                            <li>Protein: {{entry.protein}}g</li>
+                            <li>Fat: {{entry.fat}}g</li>
+                            <li>Carbs: {{entry.carbs}}g</li>
+                        {% elif type == 'composition' %}
+                            <li>Body Fat: {{entry.bodyfat}}%</li>
+                            <li>Lean Mass: {{entry.lean_mass}}{{weight}}</li>
+                            <li>Fat Mass: {{entry.fat_mass}}{{weight}}</li>
+                        {% elif type == 'training' %}
+                            <li>Main content area</li>
+                        {% else %}
+                            <li>{{entry.weight}}{{units}}</li>
+                        {% endif %}
+                    </ul>
+                </span>
+                <span class="log_interaction">
+                    <a class="custom_button" href="{% url 'edit'|add:type|add:'log' entry.id %}">Details</a>
+                    {% load static %}
+                    <a href="{% url 'delete'|add:type|add:'log' entry.id %}"><button class="custom_button delete image"><img class="delete_img" src="{% static '/images/ep--delete64.png' %}"></button></a>
+                </span>
+            </div>
+        {% endfor %}
+        {% if not logbook %}
+        <div class="no-data log">
+            {% load static %}
+            <img class="big_logo" src="{% static '/images/ntf.png' %}">
+            <h2>Welcome to Nutrition Fitness Tracker</h2>
+            <p>Select '+' to begin a log entry</p>
+        </div>
+        {% endif %}
+    </div>
+{% else %}
+<p>Finish Account Registration to Begin Logging</p>
+{% endif %}
+{% endblock content %}

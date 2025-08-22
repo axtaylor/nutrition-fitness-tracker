@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="profile_container">
+    <span class="profile_information"> 
+        <h2 class="form_heading_area"> User Information</h2>
+        <hr>
+        {% if guest %}
+        <h3>Guest Permissions <p>Read Only</p></h3>
+        {% endif %}
+        <h3>Username <p>{{user.username}}</p></h3>
+        <h3>Height <p>{{userprofile.height}}{{height}}</p></h3>
+        <h3>Units <p>{{userprofile.units}}</p></h3>
+        <h3>Gender <p>{{userprofile.gender}}</p></h3>
+        <h3>Age <p>{{userprofile.age}}</p></h3>
+        <h3>Calories Consumed <p>{{total_cals}}</p></h3>
+    </span>
+    <div class="profile_page_form">
+        <h2 class="form_heading_area"> Update Information</h2>
+        <hr>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="django_forms">{{update_form.as_p}}</div>
+            <div class="profile_update_button"><input class="custom_button" type="submit" value="Update"/></div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

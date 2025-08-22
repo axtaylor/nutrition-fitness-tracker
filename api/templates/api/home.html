@@ -1,0 +1,338 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="system_header large">
+    <h1>Nutrition Fitness Tracker</h1>
+    {% if user is not None %}
+        <!--<a href="{% url 'logout' %}" class="custom_button temp_user">Register</a>-->
+    {% endif %}
+</div>
+{% if not has_user_profile %}
+<div class="no-data">
+    {% load static %}
+    <img class="big_logo" src="{% static 'images/ntf.png' %}">
+    <h2>Welcome to Nutrition Fitness Tracker</h2>
+    <p>Select 'Finish Registration' from the menu to complete your account registration</p>
+    {% load static %}
+    <div><img class="help_arrow" src="{% static 'images/arrow.png' %}"></div>
+</div>
+{% else %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+{{ data|json_script:"chart_data" }}
+{% load static %}
+<script type="text/javascript" src="{% static 'scripts/home_chart.js' %}"></script>
+<div class="home_container">
+        <div class="home_dashboard">
+
+            <div class="home_panel">
+                <h2>Overview</h2>
+                <div class="home_panel_items">
+                    <div class="home_metric">
+                          <span class="home_metric_label">Current Weight</span>
+                        {% if last_weight_log %}
+                            <span class="home_metric_value">{{last_weight_log.weight}}{{weight_units}}</span>
+                        {% else %}
+                         <span class="home_metric_value home_no_data">Add Weight Log</span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                          <span class="home_metric_label">Starting Weight</span>
+                        {% if last_weight_log %}
+                            <span class="home_metric_value">{{start_weight.weight}}{{weight_units}}</span>
+                        {% else %}
+                         <span class="home_metric_value home_no_data">Add Weight Log</span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Body Fat %</span>
+                        {% if not composition_logs.bodyfat %}
+                            <span class="home_metric_value home_no_data">Add Composition Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{composition_logs.bodyfat}}%</span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Lean Body Mass</span>
+                        {% if not composition_logs.lean_mass %}
+                            <span class="home_metric_value home_no_data">Add Composition Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{composition_logs.lean_mass}}{{weight_units}}</span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Fat Mass</span>
+                        {% if not composition_logs.fat_mass %}
+                            <span class="home_metric_value home_no_data">Add Composition Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{composition_logs.fat_mass}}{{weight_units}}</span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Fat Free Mass Index, FFMI</span>
+                        {% if not ffmi %}
+                            <span class="home_metric_value home_no_data">Add Composition Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{ffmi}}</span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Body Mass Index, BMI</span>
+                        {% if not bmi %}
+                            <span class="home_metric_value home_no_data">Add Weight Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{bmi}}</span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Basal Metabolic Rate, BMR</span>
+                        {% if not bmr %}
+                            <span class="home_metric_value home_no_data">Add Weight Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{bmr}}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="home_panel">
+                <div class="calorie_button">
+                    <h2>Weight</h2>
+                    <div class ="chart_footer" style="margin: 0; position: relative; top: -0.85em;">
+                        <div class= "chartbuttons homediv">
+                            <!--<div id="week-info"></div>-->
+                            <button id="month"> 1M </button>
+                            <button id="year"> 1Y </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="home_chart_container">
+                    <canvas id="weight_chart" width="400" height="200"></canvas>
+                </div>
+                <div class="weight_stats">
+                    <div class="home_metric">
+                        <span class="home_metric_label">Weight Change, Week</span>
+                        <span class="home_metric_value">{{weight_change_week}}{{weight_units}}</span>
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Weight Change, Month</span>
+                        <span class="home_metric_value">{{weight_change_month}}{{weight_units}}</span>
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Weight Change, All Time</span>
+                        <span class="home_metric_value">{{weight_change_total}}{{weight_units}}</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="home_panel double">
+                <h2>Caloric Recommendations</h2>
+                <div class="home_panel_items">
+                    <div class="home_metric">
+                        <span class="home_metric_label">Weight Loss (-2 Lbs / Week)</span>
+                        {% if not cut2_cals %}
+                            <span class="home_metric_value home_no_data">Add More Weight and Nutrition Logs</span>
+                        {% else %}
+                            <span class="home_metric_value">{{cut2_cals}} </span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Weight Loss (-1 Lbs / Week)</span>
+                        {% if not cut_cals %}
+                            <span class="home_metric_value home_no_data">Add More Weight and Nutrition Logs</span>
+                        {% else %}
+                            <span class="home_metric_value">{{cut_cals}} </span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Weight Loss (-0.5 Lbs / Week)</span>
+                        {% if not cut1_cals %}
+                            <span class="home_metric_value home_no_data">Add More Weight and Nutrition Logs</span>
+                        {% else %}
+                            <span class="home_metric_value">{{cut1_cals}} </span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Maintenance (TDEE)</span>
+                        {% if not maintenance_cals %}
+                            <span class="home_metric_value home_no_data">Add More Weight and Nutrition Logs</span>
+                        {% else %}
+                            <span class="home_metric_value">{{maintenance_cals}} </span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Weight Gain (+0.5 Lbs / Week)</span>
+                        {% if not bulk1_cals %}
+                            <span class="home_metric_value home_no_data">Add More Weight and Nutrition Logs</span>
+                        {% else %}
+                            <span class="home_metric_value">{{bulk1_cals}} </span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Weight Gain (+1 Lbs / Week)</span>
+                        {% if not bulk_cals %}
+                            <span class="home_metric_value home_no_data">Add More Weight and Nutrition Logs</span>
+                        {% else %}
+                            <span class="home_metric_value">{{bulk_cals}} </span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Weight Gain (+2 Lbs / Week)</span>
+                        {% if not bulk2_cals %}
+                            <span class="home_metric_value home_no_data">Add More Weight and Nutrition Logs</span>
+                        {% else %}
+                            <span class="home_metric_value">{{bulk2_cals}} </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="home_panel">
+                <div class="calorie_button">
+                     <h2>Nutrition</h2>
+                    <div class = "chart_footer" style="margin: 0; position: relative; top: -0.85em;">
+                        <div class="chartbuttons homediv">
+                            <!--<div id="week-info"></div>-->
+                            <button id="go_to_next_week" style="font-weight: 800;"> − </button>
+                            <button id="go_to_last_week"  style="font-weight: 800;"> + </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="home_chart_container">
+                    <canvas id="cal_chart" width="300" height="300"></canvas>
+                </div>
+                <div class="macro_stats main">
+                    <div class="home_metric">
+                        <span class="home_metric_label">Average Calories, Week</span>
+                        {% if not weekly_cals %}
+                            <span class="home_metric_value home_no_data">Add Nutrition Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{weekly_cals}} </span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Average Calories, Month</span>
+                        {% if not monthly_cals %}
+                            <span class="home_metric_value home_no_data">Add Nutrition Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{monthly_cals}} </span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Average Calories, Overall</span>
+                        {% if not total_cals %}
+                            <span class="home_metric_value home_no_data">Add Nutrition Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{total_cals}} </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="home_panel">
+                <h2>Energy Expenditure</h2>
+                <div class="home_panel_items">
+                    <div class="home_metric">
+                        <span class="home_metric_label">Energy Expenditure, Week</span>
+                        {% if not energy_expenditure_week %}
+                            <span class="home_metric_value home_no_data">Add Weight Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{energy_expenditure_week}} Calories / Week</span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Energy Expenditure, Month</span>
+                        {% if not energy_expenditure_month %}
+                            <span class="home_metric_value home_no_data">Add Weight Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{energy_expenditure_month}} Calories / Week</span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Energy Expenditure, All Time</span>
+                        {% if not energy_expenditure_total %}
+                            <span class="home_metric_value home_no_data">Add Weight Log</span>
+                        {% else %}
+                            <span class="home_metric_value">{{energy_expenditure_total}} Calories / Week</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="home_panel">
+                <h2>Activity and Fitness</h2>
+                <div class="home_panel_items">
+                    <div class="home_metric">
+                        <span class="home_metric_label">Daily Calorie Expenditure After BMR</span>
+                        {% if not activity_calories %}
+                            <span class="home_metric_value home_no_data">Add Weight Log and Nutrition Logs</span>
+                        {% else %}
+                            <span class="home_metric_value">{{activity_calories}} Calories</span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Predicted Activity Level</span>
+                        {% if not activity_level %}
+                            <span class="home_metric_value home_no_data">Add Weight and Nutrition Logs</span>
+                        {% else %}
+                            <span class="home_metric_value">{{activity_level}}</span>
+                        {% endif %}
+                    </div>
+                    <div class="home_metric">
+                        <span class="home_metric_label">Activity Multiplier</span>
+                        {% if not activity_multiplier %}
+                            <span class="home_metric_value home_no_data">Add Weight and Nutrition Logs</span>
+                        {% else %}
+                            <span class="home_metric_value">{{activity_multiplier}}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="home_panel">
+                <h2>Body Fat Projections</h2>
+                <div class="home_panel_items proj">
+                    {% for entry, level, tag in projections %}
+                    <div class="home_metric">
+                        <span class="home_metric_label">{{level}}% - {{tag}}</span>
+                        {% if not composition_logs.bodyfat %}
+                            <span class="home_metric_value home_no_data">Add Composition Log</span>
+                        {% else %}
+                            <span class="home_metric_value"> {{entry}}{{weight_units}}  </span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+            <div class="home_panel">
+                <h2>Composition Chart</h2>
+                <div class="home_chart_container">
+                    <canvas id="comp_chart" width="300" height="300"></canvas>
+                </div>
+                <div class="macro_stats">
+                    <div class="macro_item" style="background: #43e97a30;">
+                        <span class="macro_label">Body Fat %</span>
+                        <span class="macro-value bf"></span>
+                    </div>
+                    <div class="macro_item" style="background: #ffa66637;">
+                        <span class="macro_label">Lean Mass</span>
+                        <span class="macro-value lm"></span><span class="macro-value" style="margin-left: -0.5em;">{{weight_units}}</span>
+                    </div>
+                    <div class="macro_item" style="background: #4facfe37;">
+                        <span class="macro_label">Fat Mass</span>
+                        <span class="macro-value fm"></span><span class="macro-value" style="margin-left: -0.5em;">{{weight_units}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    {% endif %}
+</div>
+{% endblock content %}

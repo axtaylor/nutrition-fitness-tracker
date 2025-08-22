@@ -1,0 +1,34 @@
+{% extends 'main.html' %}
+{% block content %}
+{% if not request.user.is_authenticated %}
+<div class="login_container">
+    <div class="generic_forms_container">
+        <form method="POST" action="" autocomplete="new-password">
+            {% csrf_token %}
+            {% if submit_type == 'login' %}
+                <h2 class="form_heading_area">Nutrition Fitness Tracker</h2>
+                <hr>
+                <div class='django_forms register'>{{form.as_p}}</div>
+                {% load static %}
+                <script type="text/javascript" src="{% static 'scripts/guest_user.js' %}"></script> 
+                <div class="login_buttons">
+                    <input class="custom_button login" type="submit" value="Login"/>
+                    <a class="custom_button" href="{% url 'register' %}">Register</a>
+                    <a class="custom_button guest" href="{% url 'guest_login' %}">Preview</a>
+                </div>
+            {% else %}
+                <h2 class="form_heading_area">Account Registration</h2>
+                <hr>
+                <div class="django_forms">{{reg_form.as_p}}</div>
+                <div class="login_buttons">
+                    <input class="custom_button" type="submit" value="Register"/>
+                    <a class="custom_button"href="{% url 'login' %}">Already Have an Account?</a>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% else %}
+<h2>Account Already Registered!</h2>
+{% endif %}
+{% endblock content %}

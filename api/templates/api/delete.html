@@ -1,0 +1,13 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="delete_container">
+    <form class="generic_forms_container delete" method="POST" action="">
+        {% csrf_token %}
+        <h3>Delete Entry "{{deleting_object.date}}"?</h3>
+        <div class="login_buttons">
+            <input class="custom_button delete" type="submit" value="Delete"/>
+            <a class="custom_button" href="{{request.META.HTTP_REFERER}}">Cancel</a> 
+        </div>
+    </form>
+</div>
+{% endblock content %}

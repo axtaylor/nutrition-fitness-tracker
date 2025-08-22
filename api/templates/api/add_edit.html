@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+{% block content %}
+{% load static %}
+<script type="text/javascript" src="{% static 'scripts/pop_up.js' %}"></script>
+{{ log_info|json_script:"log_info" }}
+<div class="add_log_div">
+    <form class="add_log_form_container" method="POST" action="">
+        <div class ="form_heading_area">
+            <h2> {% if type == "add" %}Add Entry{% else %}Edit Entry{% endif %}</h2>
+            <a class="custom_button temp_user" style="margin-bottom: 0.75em; padding: 0.4em 0.65em; border-radius: 50%; top:0.89em;">?</a>
+        </div>
+        <hr>
+        {% if type == "add" %}
+        {% csrf_token %}
+        <div class="django_forms">{{add_form.as_p}}</div>
+        <div class="profile_update_button">
+            <input class ="custom_button" type="submit" value="Add"/>
+            <a class="custom_button" href="{{request.META.HTTP_REFERER}}">Cancel</a>
+        </div>
+        {% else %}
+        {% csrf_token %}
+        <div class="django_forms">{{edit_form.as_p}}</div>
+        <div class="profile_update_button"><input class ="custom_button" type="submit" value="Done"/></div>
+        {% endif %}
+    </form>
+</div>
+{% endblock content %}

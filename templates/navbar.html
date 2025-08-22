@@ -1,0 +1,34 @@
+<nav class="hidden">
+    <div>
+        <div class="menu_head">
+            {% load static %}
+            <img class="logo_img" src="{% static 'images/ntf.png' %}">
+        </div>
+        <div class="shortline"><hr></div>
+            {% if request.user.is_authenticated %}
+                {% if has_user_profile %}
+                    <span class="nav_entries">
+                        <a class="nav_page {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+                        <a class="nav_page {% if request.resolver_match.url_name == 'graph' %}active{% endif %}" href="{% url 'graph' %}">Chart</a>
+                        <a class="nav_page {% if request.resolver_match.url_name == 'weightlog' %}active{% endif %}" href="{% url 'weightlog' %}">Weight Log</a>
+                        <a class="nav_page {% if request.resolver_match.url_name == 'nutritionlog' %}active{% endif %}" href="{% url 'nutritionlog' %}">Nutrition Log</a>
+                        <a class="nav_page {% if request.resolver_match.url_name == 'compositionlog' %}active{% endif %}" href="{% url 'compositionlog' %}">Composition Log</a>
+                       <!-- ADD FEATURE LATER <a class="nav_page {% if request.resolver_match.url_name == 'traininglog' %}active{% endif %}" href="{% url 'traininglog' %}">Training Log</a>-->
+                        <a class="nav_page {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}">About</a>
+                        <a class="nav_page {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}">Account</a>
+                        <a class="nav_page {% if request.resolver_match.url_name == 'logout' %}active{% endif %} signout" href="{% url 'logout' %}">Sign Out</a>
+                    </span>
+                {% else %}
+                    <span class="nav_entries">
+                        <a class="nav_page {% if request.resolver_match.url_name == 'addprofile' %}active{% endif %}" href="{% url 'addprofile' %}">Finish Registration</a>
+                        <a class="nav_page {% if request.resolver_match.url_name == 'logout' %}active{% endif %} signout" href="{% url 'logout' %}">Sign Out</a>
+                    </span>
+                {% endif %}        
+            {% endif %}
+    </div>
+    <div class="nav_footer">
+        <div class='shortline'><hr></div><br>
+        <h2>Nutrition Fitness Tracker</h2>
+    </div>
+</nav>
+
