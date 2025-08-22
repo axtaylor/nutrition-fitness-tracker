@@ -10,7 +10,6 @@
                 <hr>
                 <div class='django_forms register'>{{form.as_p}}</div>
                 {% load static %}
-                <script type="text/javascript" src="{% static 'scripts/guest_user.js' %}"></script> 
                 <div class="login_buttons">
                     <input class="custom_button login" type="submit" value="Login"/>
                     <a class="custom_button" href="{% url 'register' %}">Register</a>
@@ -22,7 +21,7 @@
                 <div class="django_forms">{{reg_form.as_p}}</div>
                 <div class="login_buttons">
                     <input class="custom_button" type="submit" value="Register"/>
-                    <a class="custom_button"href="{% url 'login' %}">Already Have an Account?</a>
+                    <a class="custom_button"href="{% url 'login' %}">Back</a>
                 </div>
             {% endif %}
         </form>

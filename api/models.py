@@ -12,7 +12,7 @@ class WeightLog(models.Model):
     weight = models.DecimalField(decimal_places=2, max_digits=12, null=False, default=0)
 
     class Meta():
-        ordering = ["-date"]
+        ordering = ["user", "-date"]
 
 class NutritionLog(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -25,7 +25,7 @@ class NutritionLog(models.Model):
     carbs = models.IntegerField(null=False, default=0)
 
     class Meta():
-        ordering = ["-date"]
+        ordering = ["user", "-date"]
 
 
 class CompositionLog(models.Model):
@@ -47,7 +47,7 @@ class CompositionLog(models.Model):
     neck = models.DecimalField(decimal_places=2, max_digits=6, null=False, default=0)
 
     class Meta():
-        ordering = ["-date"]
+        ordering = ["user", "-date"]
 
 class TrainingLog(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -55,7 +55,7 @@ class TrainingLog(models.Model):
     date = models.DateField(null=False)
 
     class Meta():
-        ordering = ["-date"]
+        ordering = ["user", "-date"]
 
 class UserInformation(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=False, primary_key=True)

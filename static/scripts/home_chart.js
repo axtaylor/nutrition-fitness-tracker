@@ -125,9 +125,9 @@ function weight_chart_config(labels, data, min, max) {
                 tension: 0.4,
                 pointBackgroundColor: '#4facfe',
                 pointBorderColor: '#ffffff',
-                pointBorderWidth: 2,
-                pointRadius: 6,
-                pointHoverRadius: 8,
+                pointBorderWidth: 1,
+                pointRadius: 4,
+                pointHoverRadius: 6,
                 pointHoverBackgroundColor: '#4facfe',
                 pointHoverBorderColor: '#ffffff'
             }]

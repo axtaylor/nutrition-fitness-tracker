@@ -76,7 +76,7 @@ hr {
     .system_header.large, .system_header.temp { font-size: 0.75em !important; }
     .system_header.temp { padding-left: 3em;}
     :root{
-        font-size: 0.9em;
+        font-size: 0.88em;
     }
 }
 /*
@@ -567,6 +567,11 @@ nav.hidden {
 .log_info h2{
     font-weight: 600;
 }
+@media (max-width: 768px) {
+    .log_info h2{
+        font-size: 1.25em;
+    }
+}
 .log_interaction {
     padding: 0.5em;
     display: flex;
@@ -595,6 +600,7 @@ nav.hidden {
    DELETE PAGE  [CLEANED]
  */
 .delete_container {
+    text-align: center;
     display: grid;
     grid-template-columns: 1fr;
     place-items: center;
