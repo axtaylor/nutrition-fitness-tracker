@@ -1,6 +1,6 @@
 # Nutrition Fitness Tracker
 
-[nutrition-fitness-tracker.ca](www.nutrition-fitness-tracker.ca)
+[nutrition-fitness-tracker.ca](https://www.nutrition-fitness-tracker.ca)
 
 
 Nutrition and Composition tracker with an emphasis on statistics and science-based tracking methodologies. 
