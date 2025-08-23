@@ -25,11 +25,13 @@ def body_fat_projections(composition_log, bf) -> float:
     except Exception:
         return 0
 
-def ffmi(composition_log) -> float:
+def ffmi(composition_log, queryset_info) -> float:
     try:
-        lean_mass, height = float(composition_log.weight-(composition_log.weight*((composition_log.bodyfat/100)))), float(composition_log.height)
-        ffmi = (lean_mass/2.2)/(((height)*0.0254)**2)
-        ffmi_normalized = ffmi+(6.3*(1.8-(height)*0.0254))
+        lean_mass, height, units = float(composition_log.weight-(composition_log.weight*((composition_log.bodyfat/100)))), float(composition_log.height), str(queryset_info.units)
+        weight_multiplier = 0.453592 if units == "Imperial" else 1
+        height_multiplier =0.0254 if units == "Imperial" else 1
+        ffmi = (lean_mass*weight_multiplier)/(((height*height_multiplier))**2)
+        ffmi_normalized = ffmi+(6.3*(1.8-(height*height_multiplier)))
         return ffmi_normalized
     except (Exception, ZeroDivisionError):  
         return 0
@@ -42,8 +44,8 @@ def days_logged(weight_log) -> int:
     
 def bmi(last_weight_log, queryset_info) -> float:
     try:
-        weight, height = float(last_weight_log.weight), float(queryset_info.height)
-        return ((weight/height**2)*703)
+        weight, height, units = float(last_weight_log.weight), float(queryset_info.height), str(queryset_info.units)
+        return ((weight/(height**2))*703) if units == "Imperial" else (weight/(height**2))
     except (Exception):
         return 0
 
@@ -105,7 +107,7 @@ def weight_change(days: int, weight_logs) -> float:
         return 0
     
 # Weekly caloric expenditure over three time intervals
-def energy_expenditure_week(type: str, days: int, weight_change: float) -> float:
+def daily_energy_expenditure(type: str, days: int, weight_change: float) -> float:
     try:
         if type == 'week':
             weight = float(weight_change)

@@ -181,7 +181,7 @@ def home(request):
 
         bmi = services.bmi(recent_weight, user_information)
         bmr = services.bmr(recent_weight, user_information)
-        ffmi = services.ffmi(composition_log)
+        ffmi = services.ffmi(composition_log, user_information)
 
         total_cals = services.average_calories(relative_days, 0, nutrition_logs)
         weekly_cals = services.average_calories(relative_days, 7, nutrition_logs[:7] if nutrition_logs.exists() else 0)
@@ -191,9 +191,9 @@ def home(request):
         weight_change_week = services.weight_change(7, weight_logs[:7] if weight_logs.exists() else 0)
         weight_change_month = services.weight_change(28, weight_logs[:28] if weight_logs.exists() else 0)
 
-        energy_expenditure_week = services.energy_expenditure_week('week', days, weight_change_week)
-        energy_expenditure_month = services.energy_expenditure_week('month', days, weight_change_month) 
-        energy_expenditure_total = services.energy_expenditure_week('total', days, weight_change_total)
+        energy_expenditure_week = services.daily_energy_expenditure('week', days, weight_change_week)
+        energy_expenditure_month = services.daily_energy_expenditure('month', days, weight_change_month) 
+        energy_expenditure_total = services.daily_energy_expenditure('total', days, weight_change_total)
 
         maintenance_cals = services.energy_targets(energy_expenditure_month, monthly_cals)
         bulk_cals = services.energy_targets(energy_expenditure_month, monthly_cals, 500)

@@ -235,27 +235,27 @@
                 <h2>Energy Expenditure</h2>
                 <div class="home_panel_items">
                     <div class="home_metric">
-                        <span class="home_metric_label">Energy Expenditure, Week</span>
+                        <span class="home_metric_label">Daily Energy Expenditure, Last Week</span>
                         {% if not energy_expenditure_week %}
                             <span class="home_metric_value home_no_data">Add Weight Log</span>
                         {% else %}
-                            <span class="home_metric_value">{{energy_expenditure_week}} Calories / Week</span>
+                            <span class="home_metric_value">{{energy_expenditure_week}} Calories</span>
                         {% endif %}
                     </div>
                     <div class="home_metric">
-                        <span class="home_metric_label">Energy Expenditure, Month</span>
+                        <span class="home_metric_label">Daily Energy Expenditure, Last Month</span>
                         {% if not energy_expenditure_month %}
                             <span class="home_metric_value home_no_data">Add Weight Log</span>
                         {% else %}
-                            <span class="home_metric_value">{{energy_expenditure_month}} Calories / Week</span>
+                            <span class="home_metric_value">{{energy_expenditure_month}} Calories</span>
                         {% endif %}
                     </div>
                     <div class="home_metric">
-                        <span class="home_metric_label">Energy Expenditure, All Time</span>
+                        <span class="home_metric_label">Daily Energy Expenditure, All Time</span>
                         {% if not energy_expenditure_total %}
                             <span class="home_metric_value home_no_data">Add Weight Log</span>
                         {% else %}
-                            <span class="home_metric_value">{{energy_expenditure_total}} Calories / Week</span>
+                            <span class="home_metric_value">{{energy_expenditure_total}} Calories</span>
                         {% endif %}
                     </div>
                 </div>
