@@ -139,6 +139,14 @@ select {
 input[type='date']{
     min-height: 40px;
 }
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type='date']:focus,
+select:focus {
+    border: 0.1em solid #2A7FDF;
+    outline: none;
+}
 .change_graph select {
     background: var(--span);
     border: 1px solid var(--transparent-border-medium);
@@ -169,8 +177,8 @@ input[type='date']{
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-    margin-top: 0.5em;
-    padding: .5em 0em .5em 0em;
+    position: relative;
+    top: 0.25em;
 }
 .django_forms label {
     margin: 1.5em 0em 0.66em 0em;
@@ -525,6 +533,9 @@ nav.hidden {
     justify-content: center;
     gap: 1.25em;
     margin-top: 2.25em;
+}
+.login_buttons.main{
+    margin-top: 2.5em;
 }
 /*
    LOG PAGES  [CLEANED]
