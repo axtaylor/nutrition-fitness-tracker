@@ -1,6 +1,7 @@
 import math
 import datetime
 from django.db.models import Avg
+from decimal import Decimal
 
 def units(user_units) -> dict[str, str]:
     try:
@@ -67,7 +68,7 @@ def average_calories(relative_days, days: int, nutrition_logs) -> float:
         if days == 0:
             avg = nutrition_logs.aggregate(avg_calories=Avg('calories'))['avg_calories']
             return avg if avg else 0
-        elif days == 7 or days == 28:
+        elif days == 6 or days == 27:
             if abs(((list(relative_days)[0].date) - (list(nutrition_logs)[0].date)).days) > days:
                 return 0 # Weight log out of sync - means calorie information is dated.
             log = list(nutrition_logs)
@@ -86,13 +87,14 @@ def average_calories(relative_days, days: int, nutrition_logs) -> float:
         return 0
 
 # Dynamic weight change function that handles time gaps
+''' Depreciated, replaced with interpolation on a dataframe for better accuracy
 def weight_change(days: int, weight_logs) -> float:
     try:
         log = list(weight_logs)
         recent_weight = log[0].weight
         if days == 0: 
             return recent_weight-log[-1].weight
-        elif days == 7 or days == 28:
+        elif days == 6 or days == 27:
             valid_dates, start_sequence = [log[0].date], log[0].date
             for entry in log[1:]:
                 difference = (start_sequence - entry.date).days
@@ -105,14 +107,15 @@ def weight_change(days: int, weight_logs) -> float:
             return 0
     except Exception:  
         return 0
-    
+'''
+
 # Weekly caloric expenditure over three time intervals
 def daily_energy_expenditure(type: str, days: int, weight_change: float) -> float:
     try:
         if type == 'week':
             weight = float(weight_change)
         elif type == 'month': 
-            weight =  (float(weight_change)/(days/7)) if days < 28 and days > 0 else (float(weight_change)/4)
+            weight = (float(weight_change)/4) # ''' (float(weight_change)/(days/7)) if days < 28 and days > 0 else''' 
         elif type == 'total':
             weight = (float(weight_change)/(days/7)) if (days > 0) else 0
         return weight*500 if abs(weight*500) > 0 else 0
@@ -162,7 +165,6 @@ def as_dataframe(selected_log, type: str) -> dict[datetime.datetime, float]:
                 next((getattr(j, attr) for j in log if j.date == date), None)
                 for date in formatted_dates
             ]
-       # print(formatted_result if type == "lean_mass" else "")
 
         filled_dates = []
         for i in formatted_dates:
@@ -172,15 +174,59 @@ def as_dataframe(selected_log, type: str) -> dict[datetime.datetime, float]:
                 last = filled_dates[-1] if filled_dates != [] else None
                 filled_dates.append(last-datetime.timedelta(days=1))
 
+        formatted_result = formatted_result[::-1]
+
+        filled_result = linear_interpolation_algo(formatted_result)
+
+        print(formatted_result if type == "weight" else "")
+        print(filled_result if type == "weight" else "")
+        
         return {
             #'unfilled_date': formatted_dates[::-1],
             'date': filled_dates[::-1],
-            'result': formatted_result[::-1],
+            'result': formatted_result,
+            'filled_result': filled_result
         }
+    
     except Exception:
         return {
             #'unfilled_date': 0,
-            'date': 0,
-            'result': 0,
+            'date': [],
+            'result': [],
+            'filled_result': [],
         }
     
+# In the case of weight tracking, this is going to be more accurate than employing ML
+# This could potentially be more accurate than daily tracking for energy targets, since white noise is eliminated.
+# Lots of comments to understand this data structure
+def linear_interpolation_algo(formatted_result: list) -> list[Decimal]:
+    if not formatted_result:
+        return []
+    filled_result = formatted_result.copy()
+    n = len(filled_result)
+
+    i = 0
+    while i < n:
+        if filled_result[i] is not None:
+            j = i+1 # Stop at first, add J as second sequence
+
+            while j < n and filled_result[j] is None:
+                j+=1 # Increment J until list over or J is not None
+                
+            if j < n: # If the loop broke, and Not end of list
+                start = filled_result[i] # First non-none
+                end = filled_result[j] # Last non none
+                gap = j - i # days between
+
+                for k in range(i+1,j): # Iterate all Nones between i+1 and j
+                    progress = Decimal(k-i) / Decimal(gap) # Spaces from start/ length of nones
+                    interpolation = start + (progress * (end-start)) # 200LBS + 50% * (100-200) = 150 (Interpolation val for midpoint val between 100 and 200)
+                    filled_result[k] = interpolation # Fill in the none @ k with the interpolated value
+                
+                i = j # Set I to the next segment 
+            else:
+                break # Break if list is over (no interpolation needed)
+        else:
+            i += 1 #Incase None is the first (should not be reached)
+
+    return filled_result

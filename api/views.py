@@ -169,6 +169,31 @@ Home Page
 @login_required(login_url="login")
 def home(request):
     if profile_exists(request):
+
+        data_sources, periods = {
+            'weight': (WeightLog, 'weight'),
+            'bodyfat': (CompositionLog, 'bodyfat'),
+            'lean_mass': (CompositionLog, 'lean_mass'),
+            'fat_mass': (CompositionLog, 'fat_mass'),
+            'calories': (NutritionLog, 'calories'),
+            'protein': (NutritionLog, 'protein'),
+            'carbs': (NutritionLog, 'carbs'),
+            'fat': (NutritionLog, 'fat'),
+        }, [1, 7, 28, 365, 100000]
+
+        data = {}
+        for metric, (model, field) in data_sources.items():
+            log = model.objects.filter(user=request.user).order_by('-date')
+            df = services.as_dataframe(log, field)
+            labels = df.get('date', [])
+            values = df.get('result', [])
+            imputed_values = df.get('filled_result', [])
+            data[metric] = {}
+            for period in periods:
+                data[metric][f'labels_{period}'] = labels[-period:] if labels else []
+                data[metric][f'data_{period}'] = values[-period:] if values else []   
+                data[metric][f'imputed_data_{period}'] = imputed_values[-period:] if imputed_values else []     
+    
         user_information = UserInformation.objects.filter(user=request.user).first()
         composition_log = CompositionLog.objects.filter(user=request.user).order_by('-date').first()
         nutrition_logs = NutritionLog.objects.filter(user=request.user).order_by('-date')
@@ -184,12 +209,17 @@ def home(request):
         ffmi = services.ffmi(composition_log, user_information)
 
         total_cals = services.average_calories(relative_days, 0, nutrition_logs)
-        weekly_cals = services.average_calories(relative_days, 7, nutrition_logs[:7] if nutrition_logs.exists() else 0)
-        monthly_cals = services.average_calories(relative_days, 28, nutrition_logs[:28] if nutrition_logs.exists() else 0)
+        weekly_cals = services.average_calories(relative_days, 6, nutrition_logs[:6] if nutrition_logs.exists() else 0)
+        monthly_cals = services.average_calories(relative_days, 27, nutrition_logs[:27] if nutrition_logs.exists() else 0)
  
-        weight_change_total = services.weight_change(0, weight_logs)
-        weight_change_week = services.weight_change(7, weight_logs[:7] if weight_logs.exists() else 0)
-        weight_change_month = services.weight_change(28, weight_logs[:28] if weight_logs.exists() else 0)
+        #weight_change_total = services.weight_change(0, weight_logs)
+        #weight_change_week = services.weight_change(6, weight_logs[:6] if weight_logs.exists() else 0)
+        #weight_change_month = services.weight_change(27, weight_logs[:27] if weight_logs.exists() else 0)
+
+        # NEW: Linear interpolation imputation for missing weight values
+        weight_change_total = data["weight"]['imputed_data_100000'][-1] - data["weight"]['imputed_data_100000'][0] if data else 0
+        weight_change_week =  data["weight"]['imputed_data_7'][-1] - data["weight"]['imputed_data_7'][0] if data else 0
+        weight_change_month =  data["weight"]['imputed_data_28'][-1] - data["weight"]['imputed_data_28'][0] if data else 0
 
         energy_expenditure_week = services.daily_energy_expenditure('week', days, weight_change_week)
         energy_expenditure_month = services.daily_energy_expenditure('month', days, weight_change_month) 
@@ -210,28 +240,6 @@ def home(request):
         bodyfats, tag = [5, 10, 15, 17.5, 20, 25, 30] if user_information.gender == "Male" else [10, 15, 20, 25, 30, 35, 40], ['Stage', 'Lean', 'Athletic', 'Average', 'Acceptable', 'Overweight', 'Obese']
         projections_list = [services.body_fat_projections(composition_log, i) for i in bodyfats]
 
-        data_sources, periods = {
-            'weight': (WeightLog, 'weight'),
-            'bodyfat': (CompositionLog, 'bodyfat'),
-            'lean_mass': (CompositionLog, 'lean_mass'),
-            'fat_mass': (CompositionLog, 'fat_mass'),
-            'calories': (NutritionLog, 'calories'),
-            'protein': (NutritionLog, 'protein'),
-            'carbs': (NutritionLog, 'carbs'),
-            'fat': (NutritionLog, 'fat'),
-        }, [1, 7, 27, 365]
-
-        data = {}
-        for metric, (model, field) in data_sources.items():
-            log = model.objects.filter(user=request.user).order_by('-date')
-            df = services.as_dataframe(log, field)
-            labels = df.get('date', [])
-            values = df.get('result', [])
-            data[metric] = {}
-            for period in periods:
-                data[metric][f'labels_{period}'] = labels[-period:] if labels else []
-                data[metric][f'data_{period}'] = values[-period:] if values else []        
-    
         context = {'weight_units': weight_units,
                    'start_weight': WeightLog.objects.filter(user=request.user).order_by('date').first(),
                    'last_weight_log': recent_weight,
@@ -473,6 +481,7 @@ def generic_edit_log(request, log_type, uuid_key):
     )
 
 
+@csrf_protect
 @login_required(login_url="login")
 def generic_delete_log(request, log_type, uuid_key):
 
@@ -499,14 +508,17 @@ def generic_delete_log(request, log_type, uuid_key):
 def weight_log(request):
     return generic_log_view(request, 'weight')
 
+@csrf_protect
 @login_required(login_url="login")
 def add_log(request):
     return generic_add_log(request, 'weight')
 
+@csrf_protect
 @login_required(login_url="login")
 def edit_log(request, uuid_key):
     return generic_edit_log(request, 'weight', uuid_key)
 
+@csrf_protect
 @login_required(login_url="login")
 def delete_log(request, uuid_key):
     return generic_delete_log(request, 'weight', uuid_key)
@@ -515,14 +527,17 @@ def delete_log(request, uuid_key):
 def nutrition_log(request):
     return generic_log_view(request, 'nutrition')
 
+@csrf_protect
 @login_required(login_url="login")
 def add_nutrition_log(request):
     return generic_add_log(request, 'nutrition')
 
+@csrf_protect
 @login_required(login_url="login")
 def edit_nutrition_log(request, uuid_key):
     return generic_edit_log(request, 'nutrition', uuid_key)
 
+@csrf_protect
 @login_required(login_url="login")
 def delete_nutrition_log(request, uuid_key):
     return generic_delete_log(request, 'nutrition', uuid_key)
@@ -531,14 +546,17 @@ def delete_nutrition_log(request, uuid_key):
 def composition_log(request):
     return generic_log_view(request, 'composition')
 
+@csrf_protect
 @login_required(login_url="login")
 def add_composition_log(request):
     return generic_add_log(request, 'composition')
 
+@csrf_protect
 @login_required(login_url="login")
 def edit_composition_log(request, uuid_key):
     return generic_edit_log(request, 'composition', uuid_key)
 
+@csrf_protect
 @login_required(login_url="login")
 def delete_composition_log(request, uuid_key):
     return generic_delete_log(request, 'composition', uuid_key)
@@ -547,14 +565,17 @@ def delete_composition_log(request, uuid_key):
 def training_log(request):
     return generic_log_view(request, 'training')
 
+@csrf_protect
 @login_required(login_url="login")
 def add_training_log(request):
     return generic_add_log(request, 'training')
 
+@csrf_protect
 @login_required(login_url="login")
 def edit_training_log(request, uuid_key):
     return generic_edit_log(request, 'training', uuid_key)
 
+@csrf_protect
 @login_required(login_url="login")
 def delete_training_log(request, uuid_key):
     return generic_delete_log(request, 'training', uuid_key)

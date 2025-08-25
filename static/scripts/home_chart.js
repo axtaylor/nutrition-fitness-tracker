@@ -192,7 +192,7 @@ function weight_chart_config(labels, data, min, max) {
     };
 }
 // Timeframe button activity sensor
-let CURRENT_PERIOD_WEIGHT = "27";
+let CURRENT_PERIOD_WEIGHT = "28";
 function set_active_button(active_button) {
     const buttons = document.querySelectorAll('.chartbuttons button');
     buttons.forEach((btn) => {
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
             set_active_button(buttons[1]);
         });
         buttons[0].addEventListener('click', () => {
-            CURRENT_PERIOD_WEIGHT = '27';
+            CURRENT_PERIOD_WEIGHT = '28';
             dom_cleanup();
             load_charts();
             set_active_button(buttons[0]);
