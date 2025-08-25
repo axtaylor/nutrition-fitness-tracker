@@ -8,7 +8,8 @@
             {% if submit_type == 'login' %}
                 <h2 class="form_heading_area">Nutrition Fitness Tracker</h2>
                 <hr>
-                <div class='django_forms register'>{{form.as_p}}</div>
+                {% csrf_token %}
+                <div class='django_forms'>{{form.as_p}}</div>
                 {% load static %}
                 <div class="login_buttons main">
                     <input class="custom_button login" type="submit" value="Login"/>
@@ -18,7 +19,8 @@
             {% else %}
                 <h2 class="form_heading_area">Account Registration</h2>
                 <hr>
-                <div class="django_forms">{{reg_form.as_p}}</div>
+                {% csrf_token %}
+                <div class="django_forms register">{{reg_form.as_p}}</div>
                 <div class="login_buttons">
                     <input class="custom_button" type="submit" value="Register"/>
                     <a class="custom_button"href="{% url 'login' %}">Back</a>

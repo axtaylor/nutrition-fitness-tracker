@@ -188,6 +188,13 @@ select:focus {
     display: inline-block;
     margin-top: 1em;
 }
+.django_forms.register p:nth-of-type(2){
+    display: flex;
+    flex-direction: column;
+}
+.django_forms.add p:first-of-type label:first-child::after{
+    content: ' (Inches or Centimeters)';
+}
 /*
    BUTTONS
  */
