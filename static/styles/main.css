@@ -157,6 +157,7 @@ select:focus {
     outline: none;
     transition: all 0.3s ease;
     width: 80%;
+    text-align: center;
 }
 .change_graph select option {
     color: var(--text-dark);
@@ -201,6 +202,7 @@ select:focus {
 .custom_button {
     background-color: #ffffff;
     display: inline-block;
+    transition: 0.3s ease;
     font-size: inherit;
     line-height: inherit;
     padding: 0.75em 1.5em;
@@ -358,7 +360,7 @@ nav.hidden {
         transform: translateX(0%);
     }
     .chart {
-        padding: 1.2em 0.5em 10em 0.5em;
+        padding: 1.2em 1em 10em 1em;
     }
 }
 @media (min-width: 768px) {
@@ -438,12 +440,15 @@ nav.hidden {
     .home_dashboard{
         grid-template-columns: 1fr;
     }
-}
+    .home_panel_items.proj, .home_panel.double .home_panel_items{
+    margin-bottom: 0em !important;
+    }
+}/*
 @media (max-width: 700px){
     .home_dashboard{
         grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     }
-}
+}*/
 .home_panel h2 {
     font-weight: 600;
     margin-bottom: 1.5rem;
@@ -456,8 +461,11 @@ nav.hidden {
     flex-direction: column;
     gap: 1.5em;
 }
-.home_panel_items.proj, .home_panel.double .home_panel_items{
+.home_panel_items.proj{
     margin-bottom: 1.5em;
+}
+.home_panel.double .home_panel_items{
+    margin-bottom: 3.3em;
 }
 .home_metric {
     display: flex;
@@ -466,6 +474,16 @@ nav.hidden {
     padding: 1em;
     background: var(--span);
     border-radius: 0.75em;
+}
+.home_metric_value.macro{
+    font-size: 1.1em;
+    text-align: center;
+    line-height: 1.25;
+    padding: 0em 0.3em 0em 0.3em;
+}
+.home_metric_label.macro{
+    display: inline-block;
+    width: 1em;
 }
 .home_metric_label {
     font-size: 1em;
@@ -529,9 +547,8 @@ nav.hidden {
  */
 .login_container {
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 3em 1em;
+    padding: 2.25em 1em;
 }
 .login_buttons {
     display: flex;
@@ -539,10 +556,21 @@ nav.hidden {
     align-items: center;
     justify-content: center;
     gap: 1.25em;
-    margin-top: 2.25em;
+    margin-top: 2.4em;
 }
 .login_buttons.main{
-    margin-top: 2.5em;
+    justify-content: center;
+}
+.custom_button.login{
+    width: 50%;
+}
+.login_buttons.reg {
+    margin-bottom: 0.5em;
+    margin-top: 2.55em;
+}
+.button3{
+    text-align: center;
+    margin-top: 2em;
 }
 /*
    LOG PAGES  [CLEANED]
