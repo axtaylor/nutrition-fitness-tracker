@@ -192,85 +192,83 @@ def home(request):
             for period in periods:
                 data[metric][f'labels_{period}'] = labels[-period:] if labels else []
                 data[metric][f'data_{period}'] = values[-period:] if values else []   
-                data[metric][f'imputed_data_{period}'] = imputed_values[-period:] if imputed_values else []     
+                data[metric][f'imputed_data_{period}'] = imputed_values[-period:] if imputed_values else [] 
     
         user_information = UserInformation.objects.filter(user=request.user).first()
         composition_log = CompositionLog.objects.filter(user=request.user).order_by('-date').first()
         nutrition_logs = NutritionLog.objects.filter(user=request.user).order_by('-date')
         weight_logs = WeightLog.objects.filter(user=request.user).order_by('-date')
-
         weight_units = services.units(user_information.units)['weight']
         days = services.days_logged(weight_logs)
-        relative_days = weight_logs if days > 0 else 0
-        recent_weight = weight_logs.first() if days > 0 else 0
 
+        recent_weight = weight_logs.first() if days > 0 else 0
         bmi = services.bmi(recent_weight, user_information)
         bmr = services.bmr(recent_weight, user_information)
         ffmi = services.ffmi(composition_log, user_information)
 
-        total_cals = services.average_calories(relative_days, 0, nutrition_logs)
-        weekly_cals = services.average_calories(relative_days, 6, nutrition_logs[:6] if nutrition_logs.exists() else 0)
-        monthly_cals = services.average_calories(relative_days, 27, nutrition_logs[:27] if nutrition_logs.exists() else 0)
- 
-        #weight_change_total = services.weight_change(0, weight_logs)
-        #weight_change_week = services.weight_change(6, weight_logs[:6] if weight_logs.exists() else 0)
-        #weight_change_month = services.weight_change(27, weight_logs[:27] if weight_logs.exists() else 0)
+        def get_nutrition_value(nutrition_data, key):
+            return nutrition_data[key] if nutrition_data is not None else 0
+        
+        total_nutrition, weekly_nutrition, monthly_nutrition = (services.nutrition_info(i, (weight_logs if days > 0 else 0), nutrition_logs) for i in [0, 7, 28])
+        nutrition_keys = ['avg_cals', 'avg_protein', 'avg_fat', 'avg_carbs']
 
-        # NEW: Linear interpolation imputation for missing weight values
-        weight_change_total = data["weight"]['imputed_data_100000'][-1] - data["weight"]['imputed_data_100000'][0] if data else 0
-        weight_change_week =  data["weight"]['imputed_data_7'][-1] - data["weight"]['imputed_data_7'][0] if data else 0
-        weight_change_month =  data["weight"]['imputed_data_28'][-1] - data["weight"]['imputed_data_28'][0] if data else 0
+        total_cals, total_protein, total_fat, total_carbs = [get_nutrition_value(total_nutrition, key) for key in nutrition_keys]
+        weekly_cals, weekly_protein, weekly_fat, weekly_carbs = [get_nutrition_value(weekly_nutrition, key) for key in nutrition_keys]
+        monthly_cals, monthly_protein, monthly_fat, monthly_carbs = [get_nutrition_value(monthly_nutrition, key) for key in nutrition_keys]
 
-        energy_expenditure_week = services.daily_energy_expenditure('week', days, weight_change_week)
-        energy_expenditure_month = services.daily_energy_expenditure('month', days, weight_change_month) 
-        energy_expenditure_total = services.daily_energy_expenditure('total', days, weight_change_total)
+        weight_change_total = data["weight"]['imputed_data_100000'][-1] - data["weight"]['imputed_data_100000'][0] if days > 0 else 0
+        weight_change_week =  data["weight"]['imputed_data_7'][-1] - data["weight"]['imputed_data_7'][0] if days > 0 else 0
+        weight_change_month =  data["weight"]['imputed_data_28'][-1] - data["weight"]['imputed_data_28'][0] if days > 0 else 0
 
-        maintenance_cals = services.energy_targets(energy_expenditure_month, monthly_cals)
-        bulk_cals = services.energy_targets(energy_expenditure_month, monthly_cals, 500)
-        cut_cals = services.energy_targets(energy_expenditure_month, monthly_cals, -500)
-        cut1_cals = services.energy_targets(energy_expenditure_month, monthly_cals, -250)
-        cut2_cals = services.energy_targets(energy_expenditure_month, monthly_cals, -1000)
-        bulk1_cals = services.energy_targets(energy_expenditure_month, monthly_cals, 250)
-        bulk2_cals = services.energy_targets(energy_expenditure_month, monthly_cals, 1000)
+        energy_expenditure_week, energy_expenditure_month, energy_expenditure_total = [services.daily_energy_expenditure(i, days, j) for i, j in zip(['week', 'month', 'total'], [weight_change_week, weight_change_month, weight_change_total])]
 
-        activity_cals = services.activity_data(maintenance_cals, bmr)['activity_cals']
-        activity_multiplier = services.activity_data(maintenance_cals, bmr)['activity_multiplier']
-        activity_level = services.activity_data(maintenance_cals, bmr)['activity_level']
+        maintenance_cals, bulk_cals, cut_cals, cut1_cals, cut2_cals, bulk1_cals, bulk2_cals = [services.energy_targets(energy_expenditure_month, monthly_cals, i) for i in [0, 500, -500, -250, -1000, 250, 1000]]
+
+        activity_cals, activity_multiplier, activity_level = [services.activity_data(maintenance_cals, bmr)[i] for i in ["activity_cals", "activity_multiplier", "activity_level"]]
 
         bodyfats, tag = [5, 10, 15, 17.5, 20, 25, 30] if user_information.gender == "Male" else [10, 15, 20, 25, 30, 35, 40], ['Stage', 'Lean', 'Athletic', 'Average', 'Acceptable', 'Overweight', 'Obese']
         projections_list = [services.body_fat_projections(composition_log, i) for i in bodyfats]
 
-        context = {'weight_units': weight_units,
-                   'start_weight': WeightLog.objects.filter(user=request.user).order_by('date').first(),
-                   'last_weight_log': recent_weight,
-                   'composition_logs': composition_log,
-                   'ffmi': round(ffmi,2),
-                   'bmi': round(bmi,2),
-                   'bmr': round(bmr,2),
-                   'total_cals': f"{total_cals:.2f}",
-                   'weekly_cals': f"{weekly_cals:.2f}",
-                   'monthly_cals': f"{monthly_cals:.2f}",
-                   'weight_change_total': f"{weight_change_total:+.2f}",
-                   'weight_change_week': f"{weight_change_week:+.2f}",
-                   'weight_change_month': f"{weight_change_month:+.2f}",
-                   'energy_expenditure_total': f"{energy_expenditure_total:+.2f}",
-                   'energy_expenditure_week': f"{energy_expenditure_week:+.2f}",
-                   'energy_expenditure_month': f"{energy_expenditure_month:+.2f}",
-                   'maintenance_cals': f"{maintenance_cals:.2f}",
-                   'bulk_cals': f"{bulk_cals:.2f}",
-                   'cut_cals': f"{cut_cals:.2f}",
-                   'cut1_cals': f"{cut1_cals:.2f}",
-                   'cut2_cals': f"{cut2_cals:.2f}",
-                   'bulk1_cals': f"{bulk1_cals:.2f}",
-                   'bulk2_cals': f"{bulk2_cals:.2f}",
-                   'activity_calories': f"{activity_cals:.2f}",
-                   'activity_multiplier': f"{activity_multiplier:.2f}",
-                   'activity_level': activity_level,
-                   'days': days,
-                   'projections': zip(projections_list, bodyfats, tag),
-                   'user': "- Preview User" if is_guest(request) else None,
-                   'data': data,
-        }
+        context = {
+            'weight_units': weight_units,
+            'start_weight': WeightLog.objects.filter(user=request.user).order_by('date').first(),
+            'last_weight_log': recent_weight,
+            'composition_logs': composition_log,
+            'ffmi': round(ffmi,2),
+            'bmi': round(bmi,2),
+            'bmr': round(bmr,2),
+            'total_cals': f"{total_cals:.0f}",
+            'weekly_cals': f"{weekly_cals:.0f}",
+            'monthly_cals': f"{monthly_cals:.0f}",
+            'total_protein': f"{total_protein:.0f}",
+            'weekly_protein': f"{weekly_protein:.0f}",
+            'monthly_protein': f"{monthly_protein:.0f}",
+            'total_fat': f"{total_fat:.0f}",
+            'weekly_fat': f"{weekly_fat:.0f}",
+            'monthly_fat': f"{monthly_fat:.0f}",
+            'total_carbs': f"{total_carbs:.0f}",
+            'weekly_carbs': f"{weekly_carbs:.0f}",
+            'monthly_carbs': f"{monthly_carbs:.0f}",
+            'weight_change_total': f"{weight_change_total:+.2f}",
+            'weight_change_week': f"{weight_change_week:+.2f}",
+            'weight_change_month': f"{weight_change_month:+.2f}",
+            'energy_expenditure_total': f"{energy_expenditure_total:+.0f}",
+            'energy_expenditure_week': f"{energy_expenditure_week:+.0f}",
+            'energy_expenditure_month': f"{energy_expenditure_month:+.0f}",
+            'maintenance_cals': f"{maintenance_cals:.0f}",
+            'bulk_cals': f"{bulk_cals:.0f}",
+            'cut_cals': f"{cut_cals:.0f}",
+            'cut1_cals': f"{cut1_cals:.0f}",
+            'cut2_cals': f"{cut2_cals:.0f}",
+            'bulk1_cals': f"{bulk1_cals:.0f}",
+            'bulk2_cals': f"{bulk2_cals:.0f}",
+            'activity_calories': f"{activity_cals:.0f}",
+            'activity_multiplier': f"{activity_multiplier:.2f}",
+            'projections': zip(projections_list, bodyfats, tag),
+            'activity_level': activity_level,
+            'user': "guest" if is_guest(request) else None,
+            'data': data,
+    }
     else:
         context = {}
     return render(request,
