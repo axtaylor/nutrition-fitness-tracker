@@ -79,11 +79,11 @@ function load_charts() {
             const compCtx = dom_cache_dict.comp_chart_obj.getContext('2d');
             chart_instances.comp = new Chart(compCtx, composition_chart_config([lm_data, fm_data]));
         }
-        // first 7 days
+
         if (dom_cache_dict.cal_chart_obj && dom_cache_dict.cal_chart_obj.getContext) {
             const calCtx = dom_cache_dict.cal_chart_obj.getContext('2d');
-            // Get initial week data - LAST 7 DAYS
-            const initial_week_data = get_week_data((max_weeks - 1) * 7);
+            current_week_index = 0;
+            const initial_week_data = get_week_data_non_overlapping(current_week_index);
             chart_instances.cal = new Chart(calCtx, calories_chart_config(
                 initial_week_data.labels,
                 initial_week_data.cal_data,
@@ -94,7 +94,6 @@ function load_charts() {
             connect_navigation_buttons();
             update_navigation_buttons();
         }
-        
     } catch (error) {
         console.error('Data log error', error);
     }
@@ -418,22 +417,40 @@ function calories_chart_config(labels, cal_data, prot, fat, carb) {
         }
     };
 }
-// get 7 days of data starting from index
-function get_week_data(start_index) {
-    const end_index = Math.min(start_index + 7, full_cal_labels.length);
-    return {
-        labels: full_cal_labels.slice(start_index, end_index),
-        cal_data: full_cal_data.slice(start_index, end_index),
-        p_data: full_p_bar_data.slice(start_index, end_index),
-        f_data: full_f_bar_data.slice(start_index, end_index),
-        c_data: full_c_bar_data.slice(start_index, end_index)
-    };
+
+
+function get_week_data_non_overlapping(week_index) {
+    const total_days = full_cal_labels.length;
+    
+    if (week_index === 0) {
+        const start_index = Math.max(0, total_days - 7);
+        return {
+            labels: full_cal_labels.slice(start_index, total_days),
+            cal_data: full_cal_data.slice(start_index, total_days),
+            p_data: full_p_bar_data.slice(start_index, total_days),
+            f_data: full_f_bar_data.slice(start_index, total_days),
+            c_data: full_c_bar_data.slice(start_index, total_days)
+        };
+    } 
+    else {
+        const days_already_shown = Math.min(7, total_days); 
+        const additional_days_back = (week_index - 1) * 7;
+        const end_index = total_days - days_already_shown - additional_days_back;
+        const start_index = Math.max(0, end_index - 7);
+        
+        return {
+            labels: full_cal_labels.slice(start_index, end_index),
+            cal_data: full_cal_data.slice(start_index, end_index),
+            p_data: full_p_bar_data.slice(start_index, end_index),
+            f_data: full_f_bar_data.slice(start_index, end_index),
+            c_data: full_c_bar_data.slice(start_index, end_index)
+        };
+    }
 }
-// update the calories chart with new week data
 function update_calories_chart() {
     if (!chart_instances.cal) return;
-    const start_index = current_week_index * 7;
-    const week_data = get_week_data(start_index);
+    
+    const week_data = get_week_data_non_overlapping(current_week_index);
     chart_instances.cal.data.labels = week_data.labels;
     chart_instances.cal.data.datasets[0].data = week_data.cal_data;
     chart_instances.cal.data.datasets[1].data = week_data.p_data.map(p => p * 4); 
@@ -446,13 +463,18 @@ function update_navigation_buttons() {
     const back_button = document.getElementById('go_to_last_week');
     const forward_button = document.getElementById('go_to_next_week');
     const weekInfo = document.getElementById('week-info');
+    
     if (back_button) back_button.disabled = current_week_index >= max_weeks - 1;
     if (forward_button) forward_button.disabled = current_week_index <= 0;
+    
     if (weekInfo) {
-        const start_date = full_cal_labels[current_week_index * 7];
-        const end_index = Math.min((current_week_index * 7) + 6, full_cal_labels.length - 1);
-        const end_date = full_cal_labels[end_index];
-        weekInfo.textContent = `${start_date} - ${end_date}`;
+
+        const week_data = get_week_data_non_overlapping(current_week_index);
+        if (week_data.labels.length > 0) {
+            const start_date = week_data.labels[0];
+            const end_date = week_data.labels[week_data.labels.length - 1];
+            weekInfo.textContent = `${start_date} - ${end_date}`;
+        }
     }
 }
 function go_to_previous_week() {
@@ -470,6 +492,7 @@ function go_to_next_week() {
 function connect_navigation_buttons() {
     const back_button = document.getElementById('go_to_last_week');
     const forward_button = document.getElementById('go_to_next_week');
+
     if (back_button) {
         back_button.onclick = go_to_previous_week;
     }
