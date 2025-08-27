@@ -125,9 +125,9 @@ function weight_chart_config(labels, data, min, max) {
                 tension: 0.4,
                 pointBackgroundColor: '#4facfe',
                 pointBorderColor: '#ffffff',
-                pointBorderWidth: 1,
-                pointRadius: 4,
-                pointHoverRadius: 6,
+                pointBorderWidth: 0,
+                pointRadius: 0,
+                pointHoverRadius: 0,
                 pointHoverBackgroundColor: '#4facfe',
                 pointHoverBorderColor: '#ffffff'
             }]
@@ -142,7 +142,7 @@ function weight_chart_config(labels, data, min, max) {
                     titleColor: '#ffffff',
                     bodyColor: '#ffffff',
                     borderColor: '#4facfe',
-                    borderWidth: 1,
+                    borderWidth: 0,
                     callbacks: {
                         label: function(context) {
                             return `Weight: ${context.parsed.y} Lbs`;
@@ -173,15 +173,16 @@ function weight_chart_config(labels, data, min, max) {
                     }
                 },
                 y: {
-                    grid: { display: false },
+                    grid: { display: true },
                     ticks: {
                         font: { size: 11 },
+                        stepSize: STEP_SIZE,
                         callback: function(value) {
                             return value/*value + ' Lbs'*/;
                         }
                     },
-                    min: Math.floor(Math.max(0, min - 2)),
-                    max: Math.floor(max + 2)
+                    min: Math.max(0, Math.floor(min / 5) * 5),
+                    max: Math.ceil(max / 5) * 5
                 }
             },
             interaction: {
@@ -192,7 +193,8 @@ function weight_chart_config(labels, data, min, max) {
     };
 }
 // Timeframe button activity sensor
-let CURRENT_PERIOD_WEIGHT = "28";
+let CURRENT_PERIOD_WEIGHT = "365";
+let STEP_SIZE = 5
 function set_active_button(active_button) {
     const buttons = document.querySelectorAll('.chartbuttons button');
     buttons.forEach((btn) => {
@@ -206,16 +208,18 @@ document.addEventListener('DOMContentLoaded', function() {
         buttons[1].addEventListener('click', () => {
             CURRENT_PERIOD_WEIGHT = '365';
             dom_cleanup();
+            STEP_SIZE = 5
             load_charts();
             set_active_button(buttons[1]);
         });
         buttons[0].addEventListener('click', () => {
             CURRENT_PERIOD_WEIGHT = '28';
             dom_cleanup();
+            STEP_SIZE = 2.5
             load_charts();
             set_active_button(buttons[0]);
         });
-        set_active_button(buttons[0]);
+        set_active_button(buttons[1]);
     }
 });
 

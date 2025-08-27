@@ -62,8 +62,12 @@ function display_chart() {
                 borderColor: '#4facfe',
                 borderWidth: 3,
                 clip: false,
-                pointRadius: 3,  
                 tension: 0.15, 
+                pointBackgroundColor: '#4facfe',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 6,
+                pointHoverRadius: 8,
                 pointHoverBackgroundColor: '#4facfe',
                 pointHoverBorderColor: '#ffffff'
             }]
@@ -77,6 +81,7 @@ function display_chart() {
             }, 
             interaction: {
                 intersect: false,
+                mode: 'index',
             },
             plugins: {
                 tooltip: {
@@ -114,7 +119,7 @@ function display_chart() {
                                 if ([0, Math.floor(ticks.length/2), Math.floor(ticks.length/4),  Math.floor(3*ticks.length/4), ticks.length-1].includes(index)) {
                                     return date.toLocaleDateString('en-US', { 
                                         day: 'numeric',
-                                        month: 'short',
+                                        month: 'numeric',
                                         year: 'numeric' 
                                     });
                                 }
@@ -150,11 +155,11 @@ function display_chart() {
                     }
                 },
                 y: {
-                    min: Math.floor(Math.max(0, min - 2)),
-                    max: Math.floor(max + 2),
+                    min: Math.max(0, Math.floor(min / 5) * 5),
+                    max: Math.ceil(max / 5) * 5,
                     ticks: {
                         color: chartColor,
-                        stepSize: 10,
+                        stepSize: 2.5,
                         font: {
                             size: 14,
                         },
@@ -204,8 +209,14 @@ function updateChart() {
     if (current_data_type === "weight"){
         chart.options.scales.y.ticks.stepSize = 10;
         if (current_period === '365'){
-        chart.options.scales.y.max = (Math.round(Math.floor(max + 10) / 10)*10);
-        chart.options.scales.y.min = Math.round(Math.max(0, Math.floor(min - 10))/10)*10
+            chart.options.scales.y.max = (Math.round(Math.floor(max + 10) / 10)*10);
+            chart.options.scales.y.min = Math.round(Math.max(0, Math.floor(min - 10))/10)*10
+        }
+        else if (current_period === "28"){
+            chart.options.scales.y.min = Math.max(0, Math.floor(min / 5) * 5);
+            chart.options.scales.y.max = Math.ceil(max / 5) * 5;
+            chart.options.scales.y.ticks.stepSize = 2.5;
+
         }
     }
     const chart_header = document.getElementById('chart_header');
