@@ -1,11 +1,14 @@
 {% extends 'main.html' %}
 {% block content %}
+
+{% load static %}
+<script type="text/javascript" src="{% static 'scripts/home_pop_up.js' %}"></script>
+{{ user|json_script:"guest_check" }}
+
 <div class="system_header large">
     <h1>Nutrition Fitness Tracker</h1>
-    {% if user is not None %}
-        <!--<a href="{% url 'logout' %}" class="custom_button temp_user">Register</a>-->
-    {% endif %}
 </div>
+
 {% if not has_user_profile %}
 <div class="no-data">
     {% load static %}
@@ -16,10 +19,12 @@
     <div><img class="help_arrow" src="{% static 'images/arrow.png' %}"></div>
 </div>
 {% else %}
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
 {{ data|json_script:"chart_data" }}
 {% load static %}
 <script type="text/javascript" src="{% static 'scripts/home_chart.js' %}"></script>
+
 <div class="home_container">
         <div class="home_dashboard">
 
@@ -203,28 +208,38 @@
                     <canvas id="cal_chart" width="300" height="300"></canvas>
                 </div>
                 <div class="macro_stats main">
+                    <span class="home_metric_label" style="font-weight: 600; font-size: 1.2em; margin: 0.5em 0em 0.5em 0em;">Nutrition Averages</span>
                     <div class="home_metric">
-                        <span class="home_metric_label">Average Calories, Week</span>
+                        <span class="home_metric_label macro">1W</span>
                         {% if not weekly_cals %}
                             <span class="home_metric_value home_no_data">Add Nutrition Log</span>
                         {% else %}
-                            <span class="home_metric_value">{{weekly_cals}} </span>
+                            <span class="home_metric_value macro">{{weekly_cals}} Calories</span>
+                            <span class="home_metric_value macro">{{weekly_protein}} P</span>
+                            <span class="home_metric_value macro">{{weekly_fat}} F</span>
+                            <span class="home_metric_value macro">{{weekly_carbs}} C</span>
                         {% endif %}
                     </div>
                     <div class="home_metric">
-                        <span class="home_metric_label">Average Calories, Month</span>
+                        <span class="home_metric_label macro">1M</span>
                         {% if not monthly_cals %}
                             <span class="home_metric_value home_no_data">Add Nutrition Log</span>
                         {% else %}
-                            <span class="home_metric_value">{{monthly_cals}} </span>
+                            <span class="home_metric_value macro">{{monthly_cals}} Calories</span>
+                            <span class="home_metric_value macro">{{monthly_protein}} P</span>
+                            <span class="home_metric_value macro">{{monthly_fat}} F</span>
+                            <span class="home_metric_value macro">{{monthly_carbs}} C</span>
                         {% endif %}
                     </div>
                     <div class="home_metric">
-                        <span class="home_metric_label">Average Calories, Overall</span>
+                        <span class="home_metric_label macro">1Y</span>
                         {% if not total_cals %}
                             <span class="home_metric_value home_no_data">Add Nutrition Log</span>
                         {% else %}
-                            <span class="home_metric_value">{{total_cals}} </span>
+                            <span class="home_metric_value macro">{{total_cals}} Calories</span>
+                            <span class="home_metric_value macro">{{total_protein}} P</span>
+                            <span class="home_metric_value macro">{{total_fat}} F</span>
+                            <span class="home_metric_value macro">{{total_carbs}} C</span>
                         {% endif %}
                     </div>
                 </div>
@@ -232,10 +247,10 @@
 
 
             <div class="home_panel">
-                <h2>Energy Expenditure</h2>
+                <h2>Daily Energy Expenditure</h2>
                 <div class="home_panel_items">
                     <div class="home_metric">
-                        <span class="home_metric_label">Daily Energy Expenditure, Last Week</span>
+                        <span class="home_metric_label">Week Average</span>
                         {% if not energy_expenditure_week %}
                             <span class="home_metric_value home_no_data">Add Weight Log</span>
                         {% else %}
@@ -243,7 +258,7 @@
                         {% endif %}
                     </div>
                     <div class="home_metric">
-                        <span class="home_metric_label">Daily Energy Expenditure, Last Month</span>
+                        <span class="home_metric_label">Month Average</span>
                         {% if not energy_expenditure_month %}
                             <span class="home_metric_value home_no_data">Add Weight Log</span>
                         {% else %}
@@ -251,7 +266,7 @@
                         {% endif %}
                     </div>
                     <div class="home_metric">
-                        <span class="home_metric_label">Daily Energy Expenditure, All Time</span>
+                        <span class="home_metric_label">Overall Average</span>
                         {% if not energy_expenditure_total %}
                             <span class="home_metric_value home_no_data">Add Weight Log</span>
                         {% else %}
