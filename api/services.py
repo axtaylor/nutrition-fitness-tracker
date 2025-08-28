@@ -223,23 +223,18 @@ def linear_interpolation_algo(formatted_result: list) -> list[Decimal]:
     i = 0
 
     while i < n:
-        
         if filled_result[i] is not None:
             j = i+1 
-
             while j < n and filled_result[j] is None:
                 j+=1 
-                
             if j < n: 
                 start = filled_result[i] 
                 end = filled_result[j] 
                 gap = j - i 
-
                 for k in range(i+1,j): 
                     progress = Decimal(k-i) / Decimal(gap)
                     interpolation = start + (progress * (end-start)) 
                     filled_result[k] = interpolation 
-                
                 i = j 
             else:
                 break 
