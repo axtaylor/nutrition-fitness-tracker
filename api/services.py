@@ -95,23 +95,30 @@ def nutrition_info(days: int, relative_days, nutrition_logs) -> dict[float, floa
             'avg_carbs': nutrition_logs.aggregate(avg_carbs=Avg('carbs'))['avg_carbs'] if nutrition_logs.exists() else 0,
         }
         elif days == 7 or days == 28:
-            if abs(((list(relative_days)[0].date) - (list(nutrition_logs)[0].date)).days) > days:
-                return {
-                    'avg_cals': 0.0,
-                    'avg_protein': 0.0,
-                    'avg_fat': 0.0,
-                    'avg_carbs': 0.0,
-                }
+            
+            if days == 28:
+                if abs(((list(relative_days)[0].date) - (list(nutrition_logs)[0].date)).days) > days:
+                    return {
+                        'avg_cals': 0.0,
+                        'avg_protein': 0.0,
+                        'avg_fat': 0.0,
+                        'avg_carbs': 0.0,
+                    }
             
             log = list(nutrition_logs)[:days]
             valid_dates, start_sequence = [log[0].date], log[0].date
 
+            for i in log:
+                print(i.date) if days == 7 else ""
+
             for entry in log[1:]:
                 difference = (start_sequence - entry.date).days
-                if difference <= days:
+                if difference < days:
                     valid_dates.append(entry.date) # Only take logged dates within given time range
-                elif difference > days:
+                elif difference >= days:
                     break
+            
+            print(valid_dates if days == 7 else "")
 
             valid_cals = [i.calories for i in log if i.date in valid_dates] 
             valid_protein = [i.protein for i in log if i.date in valid_dates] 
