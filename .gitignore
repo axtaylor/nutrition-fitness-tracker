@@ -10,6 +10,7 @@ __pycache__
 !apps.py
 !context_processors.py
 !forms.py
+!home_context_builder.py
 !models.py
 !services.py
 !tests.py
