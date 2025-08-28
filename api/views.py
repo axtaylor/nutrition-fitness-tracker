@@ -216,9 +216,12 @@ def home(request):
         weekly_cals, weekly_protein, weekly_fat, weekly_carbs = [get_nutrition_value(weekly_nutrition, key) for key in nutrition_keys]
         monthly_cals, monthly_protein, monthly_fat, monthly_carbs = [get_nutrition_value(monthly_nutrition, key) for key in nutrition_keys]
 
-        weight_change_total = data["weight"]['imputed_data_100000'][-1] - data["weight"]['imputed_data_100000'][0] if days > 0 else 0
-        weight_change_week =  data["weight"]['imputed_data_7'][-1] - data["weight"]['imputed_data_7'][0] if days > 0 else 0
-        weight_change_month =  data["weight"]['imputed_data_28'][-1] - data["weight"]['imputed_data_28'][0] if days > 0 else 0
+        periods = ['imputed_data_100000', 'imputed_data_7', 'imputed_data_28']
+        weight_changes = {
+            period: data["weight"][period][-1] - data["weight"][period][0] if days > 0 else 0
+            for period in periods
+        }
+        weight_change_total, weight_change_week, weight_change_month = weight_changes.values()
 
         energy_expenditure_week, energy_expenditure_month, energy_expenditure_total = [services.daily_energy_expenditure(i, days, j) for i, j in zip(['week', 'month', 'total'], [weight_change_week, weight_change_month, weight_change_total])]
 

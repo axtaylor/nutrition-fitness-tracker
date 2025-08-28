@@ -84,7 +84,6 @@ def bmr(last_weight_log, queryset_info) -> float:
     except (Exception):
         return 0
 
-# Dynamic calories average function that handles time gaps
 def nutrition_info(days: int, relative_days, nutrition_logs) -> dict[float, float, float, float]:
     try:
         if days == 0:
@@ -96,7 +95,7 @@ def nutrition_info(days: int, relative_days, nutrition_logs) -> dict[float, floa
         }
         elif days == 7 or days == 28:
             
-            if days == 28:
+            if days == 28: # Monthly data used to make predictions, so ensure not out of sync with weight
                 if abs(((list(relative_days)[0].date) - (list(nutrition_logs)[0].date)).days) > days:
                     return {
                         'avg_cals': 0.0,
@@ -108,22 +107,16 @@ def nutrition_info(days: int, relative_days, nutrition_logs) -> dict[float, floa
             log = list(nutrition_logs)[:days]
             valid_dates, start_sequence = [log[0].date], log[0].date
 
-            for i in log:
-                print(i.date) if days == 7 else ""
-
             for entry in log[1:]:
                 difference = (start_sequence - entry.date).days
                 if difference < days:
-                    valid_dates.append(entry.date) # Only take logged dates within given time range
+                    valid_dates.append(entry.date)
                 elif difference >= days:
                     break
-            
-            print(valid_dates if days == 7 else "")
 
-            valid_cals = [i.calories for i in log if i.date in valid_dates] 
-            valid_protein = [i.protein for i in log if i.date in valid_dates] 
-            valid_fat = [i.fat for i in log if i.date in valid_dates] 
-            valid_carbs = [i.carbs for i in log if i.date in valid_dates] 
+            valid_cals, valid_protein, valid_fat, valid_carbs = zip(
+                *[(i.calories, i.protein, i.fat, i.carbs) for i in log if i.date in valid_dates]
+            ) or ([], [], [], [])
 
             return {
                 'avg_cals': sum(valid_cals)/len(valid_cals),
@@ -139,7 +132,6 @@ def nutrition_info(days: int, relative_days, nutrition_logs) -> dict[float, floa
             'avg_carbs': 0.0,
         }
 
-# Weekly caloric expenditure over three time intervals
 def daily_energy_expenditure(type: str, days: int, weight_change: float) -> float:
     try:
         if type == 'week':
@@ -155,7 +147,6 @@ def daily_energy_expenditure(type: str, days: int, weight_change: float) -> floa
 def energy_targets(energy_expenditure: float, consumed_calories: float, target_expenditure=0):
     try:
         target = round(float(consumed_calories)-float(energy_expenditure)+target_expenditure,2) if float(consumed_calories) > 0 and float(energy_expenditure) else 0
-        # The initial predictions are volatile, this will restrict the user until they have stabilized.
         return 0 if target < 500 or target > 6000 else target
     except Exception:  
         return 0
@@ -222,37 +213,37 @@ def as_dataframe(selected_log, type: str) -> dict[datetime.datetime, float]:
             'filled_result': [],
         }
     
-# In the case of weight tracking, this is going to be more accurate than employing ML
-# This could potentially be more accurate than daily tracking for energy targets, since white noise is eliminated.
-# Lots of comments to understand this data structure
 def linear_interpolation_algo(formatted_result: list) -> list[Decimal]:
+
     if not formatted_result:
         return []
+    
     filled_result = formatted_result.copy()
     n = len(filled_result)
-
     i = 0
+
     while i < n:
+        
         if filled_result[i] is not None:
-            j = i+1 # Stop at first, add J as second sequence
+            j = i+1 
 
             while j < n and filled_result[j] is None:
-                j+=1 # Increment J until list over or J is not None
+                j+=1 
                 
-            if j < n: # If the loop broke, and Not end of list
-                start = filled_result[i] # First non-none
-                end = filled_result[j] # Last non none
-                gap = j - i # days between
+            if j < n: 
+                start = filled_result[i] 
+                end = filled_result[j] 
+                gap = j - i 
 
-                for k in range(i+1,j): # Iterate all Nones between i+1 and j
-                    progress = Decimal(k-i) / Decimal(gap) # Spaces from start/ length of nones
-                    interpolation = start + (progress * (end-start)) # 200LBS + 50% * (100-200) = 150 (Interpolation val for midpoint val between 100 and 200)
-                    filled_result[k] = interpolation # Fill in the none @ k with the interpolated value
+                for k in range(i+1,j): 
+                    progress = Decimal(k-i) / Decimal(gap)
+                    interpolation = start + (progress * (end-start)) 
+                    filled_result[k] = interpolation 
                 
-                i = j # Set I to the next segment 
+                i = j 
             else:
-                break # Break if list is over (no interpolation needed)
+                break 
         else:
-            i += 1 #Incase None is the first (should not be reached)
+            i += 1
 
     return filled_result
