@@ -1,26 +1,19 @@
 document.addEventListener("DOMContentLoaded", function () {
-
     const all_data = JSON.parse(document.getElementById('guest_check').textContent);
-    console.log(all_data === "guest");
-
     let modelHTML = ``;
 
-    if (all_data === "guest"){
+    if (all_data == true){
 
         modelHTML = `
         <div id="helpmodel" class="model_pop">
             <div class="model-content">
                 <span class="close_button">&times;</span>
-                <h3>Nutrition Fitness Tracker - Guest</h3>
+                <h3>Preview Mode</h3>
                 <hr>
                 <p class="pop_content">Select "Sign Out" from the left side menu to exit preview mode.</p>
             </div>
-        </div>
-    `;
-        
+        </div>`;   
     }
-
-
     document.body.insertAdjacentHTML("beforeend", modelHTML);
     const style = document.createElement("style");
     style.textContent = `
@@ -73,23 +66,17 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     document.head.appendChild(style);
 
-
-    const model = document.getElementById("helpmodel");
-    const close_button = model.querySelector(".close_button");
-    /*
-    if (document) {
-        document.addEventListener("DOMContentLoaded", function (e) {
-            e.preventDefault(); 
-            model.style.display = "block";
-        });
-    }*/
-    model.style.display = "block";
-    close_button.addEventListener("click", function () {
-        model.style.display = "none";
-    });
-    window.addEventListener("click", function (e) {
-        if (e.target === model) {
+    if (all_data === true){
+        const model = document.getElementById("helpmodel");
+        const close_button = model.querySelector(".close_button");
+        model.style.display = "block";
+        close_button.addEventListener("click", function () {
             model.style.display = "none";
-        }
-    });
+        });
+        window.addEventListener("click", function (e) {
+            if (e.target === model) {
+                model.style.display = "none";
+            }
+        });
+    }
 });
