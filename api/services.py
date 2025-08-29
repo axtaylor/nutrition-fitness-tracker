@@ -58,7 +58,8 @@ def ffmi(composition_log, queryset_info) -> float:
     
 def days_logged(weight_log) -> int:
     try:
-        return ((list(weight_log)[0].date - list(weight_log)[-1].date).days)+1
+        log = list(weight_log)
+        return ((log[0].date - log[-1].date).days)+1
     
     except Exception:  
         return 0
@@ -114,9 +115,11 @@ def nutrition_info(days: int, relative_days, nutrition_logs) -> dict[float, floa
                 elif difference >= days:
                     break
 
-            valid_cals, valid_protein, valid_fat, valid_carbs = zip(
-                *[(i.calories, i.protein, i.fat, i.carbs) for i in log if i.date in valid_dates]
-            ) or ([], [], [], [])
+            nutrition_data = {
+                field: [getattr(entry, field) for entry in log if entry.date in valid_dates]
+                for field in ['calories', 'protein', 'fat', 'carbs']
+            }
+            valid_cals, valid_protein, valid_fat, valid_carbs = nutrition_data.values()
 
             return {
                 'avg_cals': sum(valid_cals)/len(valid_cals),
@@ -164,7 +167,7 @@ def activity_data(maintenance: float, bmr: float) -> dict[float, float, str]:
     except (Exception): 
         return {"activity_cals": 0.0, "activity_multiplier": 0.0, "activity_level": "",}
 
-def as_dataframe(selected_log, type: str) -> dict[datetime.datetime, float]:
+def as_dataframe(selected_log, type: str) -> dict[datetime.datetime, Decimal, Decimal]:
     try:
         log = list(selected_log)
         formatted_dates, previous_date = [log[0].date], log[0].date
@@ -172,18 +175,16 @@ def as_dataframe(selected_log, type: str) -> dict[datetime.datetime, float]:
         for entry in log[1:]:
             current_date = entry.date
             difference = (previous_date - current_date).days
-            if difference == 1:
-                formatted_dates.append(current_date)
-            elif difference > 1:
-                for _ in range(1,difference):
-                    formatted_dates.append(None)
-                formatted_dates.append(current_date)
+            if difference > 1:
+                formatted_dates.extend([None] * (difference-1))
+            formatted_dates.append(current_date)
             previous_date = current_date
 
         if type in {"weight", "bodyfat", "lean_mass", "fat_mass", "calories", "protein", "carbs", "fat"}:
             attr = type
+            log_date = {j.date: j for j in log}
             formatted_result = [
-                next((getattr(j, attr) for j in log if j.date == date), None)
+                getattr(log_date.get(date), attr, None) if log_date.get(date) else None
                 for date in formatted_dates
             ]
 

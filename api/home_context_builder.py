@@ -43,9 +43,10 @@ def build_home_context(request):
     ffmi = services.ffmi(composition_log, user_information)
 
     nutrition_info = {
-        i: services.nutrition_info(i, (weight_logs if days > 0 else 0), nutrition_logs)
-        for i in [0, 7, 28]
+        timeframe: services.nutrition_info(timeframe, (weight_logs if days > 0 else 0), nutrition_logs)
+        for timeframe in [0, 7, 28]
     }
+    
     (total_cals, total_protein, total_fat, total_carbs,
      weekly_cals, weekly_protein, weekly_fat, weekly_carbs,
      monthly_cals, monthly_protein, monthly_fat, monthly_carbs) = [
