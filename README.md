@@ -37,9 +37,3 @@ Nutrition Fitness Tracker is an application designed track body weight, body com
 
 - [Chart.js](https://www.jsdelivr.com/package/npm/chart.js?path=dist)
 
-Activity Multiplier, an approximation of exercise frequency based on the ratio of TDEE to BMR:
-
-$$\text{Activity Multiplier} = \frac{\text{Moving TDEE}}{\text{BMR}}$$
-
-
-
