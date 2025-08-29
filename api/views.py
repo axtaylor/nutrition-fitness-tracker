@@ -52,6 +52,7 @@ def login_page(request):
         },
     )
 
+@csrf_protect
 def guest_login(request):
     guest_user = User.objects.get(username="temporary_user")
     login(request, guest_user)
@@ -133,7 +134,6 @@ REDIRECT TO HOME: User does not own profile,
 @csrf_protect
 @login_required(login_url="login")
 def user_profile(request):
-
     if not profile_exists(request):
         return redirect("home")
 
@@ -154,13 +154,11 @@ def user_profile(request):
             info_form.save()
             messages.info(request, "Information Saved")
 
-    total_cals = NutritionLog.objects.filter(user=request.user).order_by('-date').aggregate(Sum('calories'))
-
     context = {
         'update_form': form,
         'userprofile': UserInformation.objects.filter(user=request.user).first(),
         'height': services.units(UserInformation.objects.filter(user=request.user).first().units)['height'],
-        'total_cals': total_cals['calories__sum'],
+        'total_cals': NutritionLog.objects.filter(user=request.user).order_by('-date').aggregate(Sum('calories'))['calories__sum'],
         'guest': is_guest(request)
     }
     
