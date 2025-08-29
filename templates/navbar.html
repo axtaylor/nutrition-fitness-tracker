@@ -4,7 +4,7 @@
             {% load static %}
             <img class="logo_img" src="{% static 'images/ntf.png' %}">
         </div>
-        <div class="shortline"><hr></div>
+        <div class="shortline top"><hr></div>
             {% if request.user.is_authenticated %}
                 {% if has_user_profile %}
                     <span class="nav_entries">

@@ -15,7 +15,7 @@
     {% if not hide_sidebar %}
         {% include 'navbar.html' %}
         {% load static %}
-        <div class="close_navbar"><button><img class="menu_img" src="{% static 'images/menu.png' %}"></div>
+        <a class="close_navbar"><img class="menu_img" src="{% static 'images/menu.png' %}"></a>
     {% endif %}
     {% if messages %}
         <!--

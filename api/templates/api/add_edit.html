@@ -6,24 +6,24 @@
 </div>
 <script type="text/javascript" src="{% static 'scripts/pop_up.js' %}"></script>
 {{ log_info|json_script:"log_info" }}
-<div class="add_log_div">
-    <form class="add_log_form_container" method="POST" action="">
-        <div class ="form_heading_area">
+<div class="container">
+    <form class="generic_forms_container" method="POST" action="">
+        <div class ="form_heading_area with_button">
             <h2> {% if type == "add" %}Add Entry{% else %}Edit Entry{% endif %}</h2>
-            <a class="custom_button temp_user" style="margin-bottom: 0.75em; padding: 0.4em 0.65em; border-radius: 50%; top:0.89em;">?</a>
+            <a class="button circle_button">?</a>
         </div>
         <hr>
         {% if type == "add" %}
         {% csrf_token %}
         <div class="django_forms">{{add_form.as_p}}</div>
-        <div class="profile_update_button double">
-            <input class ="custom_button" type="submit" value="Add"/>
-            <a class="custom_button" href="{{request.META.HTTP_REFERER}}">Cancel</a>
+        <div class="double_buttons">
+            <input class ="button" type="submit" value="Add"/>
+            <a class="button" href="{{request.META.HTTP_REFERER}}">Cancel</a>
         </div>
         {% else %}
         {% csrf_token %}
         <div class="django_forms">{{edit_form.as_p}}</div>
-        <div class="profile_update_button single"><input class ="custom_button" type="submit" value="Done"/></div>
+        <div><input class ="button single" type="submit" value="Done"/></div>
         {% endif %}
     </form>
 </div>

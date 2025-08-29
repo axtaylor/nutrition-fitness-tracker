@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     document.head.appendChild(style);
 
-    const help_button = document.querySelector(".custom_button.temp_user");
+    const help_button = document.querySelector(".button.circle_button");
     const model = document.getElementById("helpmodel");
     const close_button = model.querySelector(".close_button");
     if (help_button) {

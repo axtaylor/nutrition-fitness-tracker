@@ -1,7 +1,10 @@
 {% extends 'main.html' %}
 {% block content %}
-<div class="profile_container">
-    <span class="profile_information"> 
+<div class="system_header large">
+    <h1>Nutrition Fitness Tracker</h1>
+</div>
+<div class="double_grid_container">
+    <div class="generic_forms_container profile"> 
         <h2 class="form_heading_area"> User Information</h2>
         <hr>
         {% if guest %}
@@ -13,14 +16,14 @@
         <h3>Gender <p>{{userprofile.gender}}</p></h3>
         <h3>Age <p>{{userprofile.age}}</p></h3>
         <h3>Calories Consumed <p>{{total_cals}}</p></h3>
-    </span>
-    <div class="profile_page_form">
+    </div>
+    <div class="generic_forms_container profile">
         <h2 class="form_heading_area"> Update Information</h2>
         <hr>
         <form method="POST" action="">
             {% csrf_token %}
             <div class="django_forms">{{update_form.as_p}}</div>
-            <div class="profile_update_button"><input class="custom_button" type="submit" value="Update"/></div>
+            <input class="button single" type="submit" value="Update"/>
         </form>
     </div>
 </div>

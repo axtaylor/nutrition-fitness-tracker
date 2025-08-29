@@ -1,10 +1,10 @@
 {% extends 'main.html' %}
 {% block content %}
 {% if not request.user.is_authenticated %}
-<div class="system_header large">
+<div class="system_header">
     <h1>Nutrition Fitness Tracker</h1>
 </div>
-<div class="login_container">
+<div class="container">
     <div class="generic_forms_container">
         <form method="POST" action="" autocomplete="new-password">
             {% csrf_token %}
@@ -14,21 +14,22 @@
                 {% csrf_token %}
                 <div class='django_forms'>{{form.as_p}}</div>
                 {% load static %}
-                    <div class="login_buttons main">
-                        <input class="custom_button login" type="submit" value="Sign In"/>
-                         <a class="custom_button login" href="{% url 'register' %}">Create Account</a>
+                    <div class="double_buttons">
+                        <input class="button" type="submit" value="Sign In"/>
+                         <a class="button" href="{% url 'register' %}">Create Account</a>
                     </div>
-                <div class="button3">
-                    <a   style='color: #1980E1;'href="{% url 'guest_login' %}">Preview as Guest User (Read Only)</a>
+                <div class="preview_as_guest_button">
+                    <a href="{% url 'guest_login' %}">Preview as Guest User (Read Only)</a>
                 </div>
             {% else %}
                 <h2 class="form_heading_area">Account Registration</h2>
                 <hr>
                 {% csrf_token %}
                 <div class="django_forms register">{{reg_form.as_p}}</div>
-                <div class="login_buttons reg">
-                    <input class="custom_button login" type="submit" value="Create Account"/>
-                    <a class="custom_button login"href="{% url 'login' %}">Back</a>
+                <div class="double_buttons">
+              
+                    <input class="button" type="submit" value="Create Account"/>
+                    <a class="button" href="{% url 'login' %}">Back</a>
                 </div>
             {% endif %}
         </form>

@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 {% block content %}
 {% if has_user_profile %}
-    <div class="system_header">
+    <div class="system_header log">
         <h2>
             {% if type == 'nutrition' %}Nutrition Log
             {% elif type == 'composition' %}Composition Log  
@@ -12,9 +12,7 @@
              - Read Only
             {% endif %}
         </h2>
-        <a class='custom_button_add' href="{% url 'add'|add:type|add:'log' %}">
-           <p>+</p>
-        </a>
+        <a class='button circle_button' href="{% url 'add'|add:type|add:'log' %}"><p>+</p></a>
     </div>
     <div class="log_dashboard">
         {% for entry in logbook %}
@@ -38,15 +36,15 @@
                         {% endif %}
                     </ul>
                 </span>
-                <span class="log_interaction">
-                    <a class="custom_button" href="{% url 'edit'|add:type|add:'log' entry.id %}">Details</a>
+                <span class="details_or_delete">
+                    <a class="button log" href="{% url 'edit'|add:type|add:'log' entry.id %}">Details</a>
                     {% load static %}
-                    <a href="{% url 'delete'|add:type|add:'log' entry.id %}"><button class="custom_button delete image"><img class="delete_img" src="{% static '/images/ep--delete64.png' %}"></button></a>
+                    <a href="{% url 'delete'|add:type|add:'log' entry.id %}"><button class="button delete image"><img class="delete_img" src="{% static '/images/ep--delete64.png' %}"></button></a>
                 </span>
             </div>
         {% endfor %}
         {% if not logbook %}
-        <div class="no-data log">
+        <div class="about_container">
             {% load static %}
             <img class="big_logo" src="{% static '/images/ntf.png' %}">
             <h2>Welcome to Nutrition Fitness Tracker</h2>
