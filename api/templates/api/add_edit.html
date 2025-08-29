@@ -1,6 +1,9 @@
 {% extends 'main.html' %}
 {% block content %}
 {% load static %}
+<div class="system_header large">
+    <h1>Nutrition Fitness Tracker</h1>
+</div>
 <script type="text/javascript" src="{% static 'scripts/pop_up.js' %}"></script>
 {{ log_info|json_script:"log_info" }}
 <div class="add_log_div">
@@ -13,14 +16,14 @@
         {% if type == "add" %}
         {% csrf_token %}
         <div class="django_forms">{{add_form.as_p}}</div>
-        <div class="profile_update_button">
+        <div class="profile_update_button double">
             <input class ="custom_button" type="submit" value="Add"/>
             <a class="custom_button" href="{{request.META.HTTP_REFERER}}">Cancel</a>
         </div>
         {% else %}
         {% csrf_token %}
         <div class="django_forms">{{edit_form.as_p}}</div>
-        <div class="profile_update_button"><input class ="custom_button" type="submit" value="Done"/></div>
+        <div class="profile_update_button single"><input class ="custom_button" type="submit" value="Done"/></div>
         {% endif %}
     </form>
 </div>
