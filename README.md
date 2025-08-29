@@ -16,14 +16,6 @@ Nutrition Fitness Tracker is an application designed track body weight, body com
 - Bodyweight predictions at body fat percentage intervals.
 - Macronutrient analysis, caloric representation of consumed macronutrients.
 
-### Technologies
-
-- Python 3.13, Django 5.25
-- JavaScript, HTML5, CSS
-- MySQL, SQLite
-- Deployed on a Linux Server with PythonAnywhere
-
-
 ### Acknowledgements
 
 #### Application Logic
@@ -44,24 +36,6 @@ Nutrition Fitness Tracker is an application designed track body weight, body com
 - [Pythonanywhere](https://www.pythonanywhere.com/)
 
 - [Chart.js](https://www.jsdelivr.com/package/npm/chart.js?path=dist)
-
-### Additional Methodology
-
-Body Fat Projections in Weight Units:
-
-$$\text{Weight at Body Fat \%} = \frac{\text{Recorded Lean Mass}}{1-\frac{\text{ Desired Body Fat \%}}{100}}$$
-
-Moving Total Daily Energy Expenditure (TDEE) in Calories:
-
-$$\text{Moving TDEE} = \text{Average Calories over 28 Days} - (\frac{\text{Weight Change over 28 Days}}{4} \times 500)$$
-
-Caloric Recommendation Amount:
-
-$$\text{Recommendation} = \text{TDEE} \  \pm \text{Surplus or Deficit Calories} $$
-
-Moving Daily Caloric Expenditure after BMR:
-
-$$\text{Daily Expenditure} = \text{Moving TDEE} - \text{BMR}$$
 
 Activity Multiplier, an approximation of exercise frequency based on the ratio of TDEE to BMR:
 
