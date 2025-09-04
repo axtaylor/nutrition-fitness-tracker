@@ -1,8 +1,8 @@
 {% extends 'main.html' %}
 {% block content %}
 {% if has_user_profile %}
-    <div class="system_header log">
-        <h2>
+    <div class="system_header large log">
+        <h1>
             {% if type == 'nutrition' %}Nutrition Log
             {% elif type == 'composition' %}Composition Log  
             {% elif type == 'training' %}Training Log
@@ -11,8 +11,9 @@
             {% if guest %}
              - Read Only
             {% endif %}
-        </h2>
-        <a class='button circle_button' href="{% url 'add'|add:type|add:'log' %}"><p>+</p></a>
+        </h1>
+        {% load static %}
+        <a class='' href="{% url 'add'|add:type|add:'log' %}"><div class=""><img class="plus" src="{% static '/images/plus.png' %}"></div></a>
     </div>
     <div class="log_dashboard">
         {% for entry in logbook %}
