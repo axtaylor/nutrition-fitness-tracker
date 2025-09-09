@@ -65,9 +65,9 @@ function display_chart() {
                 tension: 0.15, 
                 pointBackgroundColor: '#4facfe',
                 pointBorderColor: '#ffffff',
-                pointBorderWidth: 2,
-                pointRadius: 6,
-                pointHoverRadius: 8,
+                pointBorderWidth: 0,
+                pointRadius: 0,
+                pointHoverRadius: 6,
                 pointHoverBackgroundColor: '#4facfe',
                 pointHoverBorderColor: '#ffffff'
             }]
@@ -128,7 +128,7 @@ function display_chart() {
                             else if (current_period === '28'){
                                 if ([0, Math.floor(ticks.length/2),  Math.floor(ticks.length/4),  Math.floor(3*ticks.length/4), ticks.length-1].includes(index)) {
                                     return date.toLocaleDateString('en-US', { 
-                                        month: 'long',
+                                        month: 'short',
                                         day: 'numeric',
                                        
                                     });

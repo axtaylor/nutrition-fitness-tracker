@@ -1,13 +1,13 @@
 {% extends 'main.html' %}
 {% block content %}
+<div class="system_header large">
+    <h1>Nutrition Fitness Tracker</h1>
+</div>
+
 
 {% load static %}
 <script type="text/javascript" src="{% static 'scripts/home_pop_up.js' %}"></script>
 {{ user|json_script:"guest_check" }}
-
-<div class="system_header large">
-    <h1>Nutrition Fitness Tracker</h1>
-</div>
 
 {% if not has_user_profile %}
 <div class="about_container">

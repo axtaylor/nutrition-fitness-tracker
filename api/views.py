@@ -47,7 +47,7 @@ def login_page(request):
         'api/login_register.html',
         {
             'submit_type': 'login',
-            'hide_sidebar': False,
+            'data': True,
             'form': form
         },
     )
@@ -89,7 +89,7 @@ def register_user(request):
         "api/login_register.html",
         {
             'reg_form': form,
-            'hide_sidebar': False,
+            'data': True,
         },
     )
 

@@ -1,7 +1,8 @@
 {% extends 'main.html' %}
 {% block content %}
+{{ data|json_script:"hide_navbar" }}
 {% if not request.user.is_authenticated %}
-<div class="system_header">
+<div class="system_header large">
     <h1>Nutrition Fitness Tracker</h1>
 </div>
 <div class="container">
