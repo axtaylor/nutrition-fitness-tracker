@@ -268,10 +268,10 @@ function composition_chart_config(data) {
                 }
             },
             cutout: '60%',
-            animation: {
+            animation: false /*{
                 animateRotate: true,
                 duration: 1000
-            }
+            }*/
         }
     };
 }
@@ -410,9 +410,9 @@ function calories_chart_config(labels, cal_data, prot, fat, carb) {
                     }
                 }
             },
-            animation: {
+            animation:{
                 animateRotate: true,
-                duration: 1000
+                duration: 10
             }
         }
     };
