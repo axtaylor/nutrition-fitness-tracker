@@ -83,9 +83,9 @@ nav.hidden { transform: translateX(-100%); }
     width: 24px; height: 24px;
     left: -0.1em; top: -0.05em;
 }
-.nav_entries { display: flex; flex-direction: column; font-size: 1.125em; }
+.nav_entries { display: flex; flex-direction: column; font-size: 1.125em; margin-top: 0.5em; }
 .nav_page { cursor: pointer; padding: 14px; border-right: 3px solid white; border-left: 3px solid white;}
-.nav_page:hover { background: var(--LIGHT-BLUE) }
+.nav_page:hover { background: var(--LIGHT-BLUE); border-right: 3px solid #46acff8e; }
 .nav_footer{margin-bottom: 36px;}
 .nav_page.active {
     background:  var(--LIGHT-BLUE);
@@ -95,6 +95,7 @@ nav.hidden { transform: translateX(-100%); }
 .signout:hover {
     background-color: var(--RED);
     font-weight: 700;
+    border-right: 0px solid var(--RED);
     color: white;
 }
 
@@ -145,7 +146,6 @@ nav.hidden { transform: translateX(-100%); }
 .django_forms .helptext{display: inline-block; margin-top: 1em;}
 .django_forms.add p:first-of-type label:first-child::after{ content: ' (Inches or Centimeters)'; }
 
-
 input[type="text"],
 input[type="password"],
 input[type="number"],
@@ -167,7 +167,6 @@ select:focus {
     border: 0.1em solid var(--DARK-BLUE);
     outline: none;
 }
-
 
 .button{
     text-align: center; color: white; font-weight: 600; font-family: inherit;
@@ -335,8 +334,6 @@ select:focus {
     align-items: center;
     justify-content: space-between;
 }
-
-
 .graph_container {
     display: grid;
     grid-template-columns: 1fr;
@@ -389,11 +386,7 @@ select:focus {
     aspect-ratio: 16 / 9;
     height: 400px;
 }
-@media (min-width: 768px) {   .chart { width: min(58vw, 900px);}}
-@media (max-width: 768px) { .chart { padding: 1.2em 1em 10em 1em; width: min(90vw, 900px); }}
-#data-selector {
-    background: var(--SPAN-COLOR);
-    border: 1px solid var(--LIGHT-BORDER);
-    text-align: center;
-    border-radius: 1.25em;
-}
+@media (min-width: 768px) {   .chart { width: min(58vw, 1200px)}}
+@media (max-width: 768px) { .chart { padding: 1.2em 1em 10em 1em; width: min(88vw, 1200px);}}
+@media (min-width: 1100px) { .chart { width: 70vw}}
+#data-selector { border-radius: 1.25em; }

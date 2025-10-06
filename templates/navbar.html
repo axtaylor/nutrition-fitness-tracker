@@ -2,7 +2,7 @@
     <div>
         <div class="menu_head">
             {% load static %}
-            <img class="logo_img" src="{% static 'images/ntf.png' %}">
+            <a href="{% url 'home' %}"><img class="logo_img" src="{% static 'images/ntf.png' %}"></a>
         </div>
         <div class="shortline top"><hr></div>
             {% if request.user.is_authenticated %}
