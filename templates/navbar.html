@@ -9,7 +9,7 @@
                 {% if has_user_profile %}
                     <span class="nav_entries">
                         <a class="nav_page {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-                        <a class="nav_page {% if request.resolver_match.url_name == 'graph' %}active{% endif %}" href="{% url 'graph' %}">Chart</a>
+                        <!--<a class="nav_page {% if request.resolver_match.url_name == 'graph' %}active{% endif %}" href="{% url 'graph' %}">Chart</a>-->
                         <a class="nav_page {% if request.resolver_match.url_name == 'weightlog' %}active{% endif %}" href="{% url 'weightlog' %}">Weight Log</a>
                         <a class="nav_page {% if request.resolver_match.url_name == 'nutritionlog' %}active{% endif %}" href="{% url 'nutritionlog' %}">Nutrition Log</a>
                         <a class="nav_page {% if request.resolver_match.url_name == 'compositionlog' %}active{% endif %}" href="{% url 'compositionlog' %}">Composition Log</a>

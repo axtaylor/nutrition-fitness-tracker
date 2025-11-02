@@ -14,7 +14,7 @@
     --chart-border: #d1d1d1;
     --chart-color: #666666;  
 }
-@media (max-width: 768px) {
+@media (max-width: 762px) {
     .system_header.large, .system_header.temp { font-size: 0.75em !important; }
     .system_header.temp { padding-left: 3em;}
     :root{ font-size: 0.88em;}
@@ -41,7 +41,7 @@ h3 { font-size: 1.25em; font-weight: 400; }
     top: 0; z-index: 99;
 }
 .system_header.large.log{ display: flex; justify-content: space-between; font-size: 0.8em; padding: 2.12em 2em 2.12em 2em}
-@media (max-width: 768px) {.system_header.large.log {padding: 1.88em 3.3em 1.88em 3.25em;};}
+@media (max-width: 762px) {.system_header.large.log {padding: 1.88em 3.3em 1.88em 3.25em;};}
 .system_header h1{white-space: nowrap; }
 .system_header.large.log h1{position:  relative; top: 0.125em;}
 .shortline.top{margin-top: 1.0935em;}
@@ -60,11 +60,11 @@ nav {
     text-align: center;
 }
 nav.hidden { transform: translateX(-100%); }
-@media (max-width: 768px) {
+@media (max-width: 762px) {
     body.blur-except-sidebar > *:not(nav, .close_navbar, .model_pop) {filter:blur(2px)}
     nav { transform: translateX(0%); }
 }
-@media (min-width: 768px) {
+@media (min-width: 762px) {
     body {margin-left:  235px; transition: 0.2s ease;}
     body.navactive{margin-left: 0px;}
     nav { transform: translateX(-100%); }
@@ -204,7 +204,7 @@ select:focus {
 .log_info li { font-weight: 400; font-size: 1em; white-space: nowrap; }
 .log_info ul { display: flex; flex-wrap: wrap; gap: 0.75em;}
 .log_info h2{ font-weight: 600; }
-@media (max-width: 768px) { .log_info h2{ font-size: 1.25em; } }
+@media (max-width: 762px) { .log_info h2{ font-size: 1.25em; } }
 
 .details_or_delete { padding: 0.5em; display: flex; gap: 1.25em; }
 .button.delete.image{

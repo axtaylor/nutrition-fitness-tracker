@@ -8,9 +8,13 @@ document.addEventListener("DOMContentLoaded", function () {
         <div id="helpmodel" class="model_pop">
             <div class="model-content">
                 <span class="close_button">&times;</span>
-                <h3>Weight Log</h3>
+                <h3>How To: Bodyweight</h3>
                 <hr>
-                <p class="pop_content">Track your bodyweight over time.</p>
+                <p class="pop_content">The bodyweight information entered will be used to calculate your rate of weight change
+                over time.</p>
+                <p class="pop_content">
+                To optimize your caloric recommendations and fitness levels, it is recommended to track your bodyweight
+                at minimum three times per week.</p>
             </div>
         </div>
     `;
@@ -22,9 +26,18 @@ document.addEventListener("DOMContentLoaded", function () {
         <div id="helpmodel" class="model_pop">
             <div class="model-content">
                 <span class="close_button">&times;</span>
-                <h3>Nutrition Log</h3>
-                <hr>
-                <p class="pop_content">Track your caloric consumption over time</p>
+                <h3>How To: Nutrition</h3>
+                <hr>                
+                <p class="pop_content">Your caloric consumption will be used with your logged bodyweight changes
+                to determine your maintenance, weight gain, and weight loss calorie amounts with high confidence. </p>
+
+                <p class="pop_content">
+                To optimize your recommendations, it is recommended to track your consumption
+                on a daily basis.</p>
+
+                <p class="pop_content">
+                It is recommended to track consumption using nutrition labels and weighing portions.
+                AI calorie photo scanners are inaccurate and will generate unreliable results.</p>
             </div>
         </div>
     `;
@@ -36,11 +49,13 @@ document.addEventListener("DOMContentLoaded", function () {
         <div id="helpmodel" class="model_pop">
             <div class="model-content">
                 <span class="close_button">&times;</span>
-                <h3>Composition Log</h3>
+                <h3>How To: Composition</h3>
                 <hr>
-                <p class="pop_content">Body Fat Percentage: Waist, Neck, (Hips, Female Only)</p>
-                <p class="pop_content">Lean Mass: Weight, Body Fat Percentage</p>
-                <p class="pop_content">Fat Mass: Weight, Body Fat Percentage</p>
+                <p class="pop_content">Methodology: US Navy</p>
+                <p class="pop_content">For Men:</p>
+                <p class="pop_content">Provide measurements of the waist, neck, and bodyweight to determine body composition metrics.</p>
+                <p class="pop_content">For Women:</p>
+                <p class="pop_content">Provide measurements of the waist, neck, hip, and bodyweight to determine body composition metrics.</p>
             </div>
         </div>
     `;
@@ -92,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         .pop_content{
             margin-bottom: 0.25em;
-            text-align: center;
+            text-align: left;
         }
         .close_button {
             float: right;

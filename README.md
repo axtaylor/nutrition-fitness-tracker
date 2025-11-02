@@ -2,9 +2,10 @@
 
 [www.nutrition-fitness-tracker.ca/](https://www.nutrition-fitness-tracker.ca)
 
-Nutrition Fitness Tracker is an application designed track body weight, body composition, and caloric consumption, returning caloric predictions, fitness frequency predictions, and a data dashboard featuring a live overview of many important health and nutrition markers.
+Advanced monitoring utility for fitness, bodyweight, body composition, and caloric predictions and analysis.
 
-### Features
+---
+### Applications
 
 - Dynamic calorie recommendations for different rates of weight loss and weight gain.
 - US Navy calculations for body fat percentage, fat free (lean) mass, fat mass.
@@ -16,9 +17,8 @@ Nutrition Fitness Tracker is an application designed track body weight, body com
 - Bodyweight predictions at body fat percentage intervals.
 - Macronutrient analysis, caloric representation of consumed macronutrients.
 
-### Acknowledgements
-
-#### Application Logic
+---
+### References
 
 - US Navy Body Fat Reference, [PMID: 31355083](https://pmc.ncbi.nlm.nih.gov/articles/PMC6650177)
 
@@ -27,13 +27,4 @@ Nutrition Fitness Tracker is an application designed track body weight, body com
 - BMI Reference, [PMID: 31082114](https://pubmed.ncbi.nlm.nih.gov/31082114/)
 
 - BMR Reference, [PMID: 2305711](https://pubmed.ncbi.nlm.nih.gov/2305711/)
-
-
-#### Development and Production
-
-- [Django](https://www.djangoproject.com/)
-
-- [Pythonanywhere](https://www.pythonanywhere.com/)
-
-- [Chart.js](https://www.jsdelivr.com/package/npm/chart.js?path=dist)
 
