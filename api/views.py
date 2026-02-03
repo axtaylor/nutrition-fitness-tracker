@@ -33,7 +33,13 @@ def login_page(request):
         return redirect('home')
 
     if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
+
+        # Mutable copy of post to lower the entered username
+        post_data = request.POST.copy()
+        if 'username' in post_data:
+            post_data['username'] = post_data['username'].lower()
+
+        form = AuthenticationForm(request, data=post_data)
         if form.is_valid():
             login(request, form.get_user())
             return redirect('addprofile')
