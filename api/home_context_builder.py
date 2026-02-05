@@ -62,6 +62,12 @@ def build_home_context(request):
             data[metric][f'data_{period}'] = values[-period:] if values else []   
             data[metric][f'imputed_data_{period}'] = imputed_values[-period:] if imputed_values else []
 
+    '''
+    DataFrame format preview
+    '''
+    #import pandas as pd
+    #test = pd.DataFrame({"Date": data['weight']['labels_28'], "Weight": data['weight']['imputed_data_28']})
+    #print(test)
 
 
     weight_units = (

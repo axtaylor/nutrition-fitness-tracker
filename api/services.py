@@ -3,8 +3,6 @@ import datetime
 from django.db.models import Avg
 from decimal import Decimal
 
-
-
 '''
 UNITS
 
@@ -524,9 +522,9 @@ def as_dataframe(selected_log, type: str) -> dict[datetime.datetime, Decimal, De
 
         return {
             #'unfilled_date': formatted_dates[::-1],
-            'date': filled_dates[::-1],
-            'result': formatted_result,
-            'filled_result': filled_result
+            'date': filled_dates[::-1],  # [oldest, ... recent]
+            'result': formatted_result,  # [oldest, ... recent]
+            'filled_result': filled_result # [oldest, ... recent]
         }
     
     except Exception:
