@@ -11,24 +11,55 @@ from django.views.decorators.csrf import csrf_protect
 from django.db.models import Sum
 
 def profile_exists(request) -> bool:
+
     try:
-        return True if UserInformation.objects.filter(user=request.user).exists() else False
+        return (
+            True if UserInformation.objects.filter(user=request.user).exists()
+            else False
+        )
     except (AttributeError):
         return False
-    
+
+
+'''
+Guest user:
+
+Pre built profile with sample data
+Read-only permissions
+Prompt to notify user is in guest mode on home page.
+
+Login as guest executes guest login designated URL
+
+'''
 def is_guest(request):
+
     try:
-        return request.user == User.objects.get(username="temporary_user")
+        return (
+            request.user == User.objects.get(username="temporary_user")
+        )
     except Exception:
         return False
-#####################################################################################################
-'''
-Login Page
 
-REDIRECT TO HOME: User is authenticated.
+@csrf_protect
+def guest_login(request):
+
+    guest_user = (
+        User.objects.get(username="temporary_user")
+    )
+
+    login(request, guest_user)
+
+    return redirect("home")
+
+#####################################################################################################
+
+'''
+Login Page for Registered Users
+
 '''
 @csrf_protect
 def login_page(request):
+
     if request.user.is_authenticated:
         return redirect('home')
 
@@ -40,11 +71,14 @@ def login_page(request):
             post_data['username'] = post_data['username'].lower()
 
         form = AuthenticationForm(request, data=post_data)
+
         if form.is_valid():
             login(request, form.get_user())
             return redirect('addprofile')
+        
         else:
             messages.error(request, 'Invalid Credentials')
+
     else:
         form = AuthenticationForm()
 
@@ -58,35 +92,50 @@ def login_page(request):
         },
     )
 
-@csrf_protect
-def guest_login(request):
-    guest_user = User.objects.get(username="temporary_user")
-    login(request, guest_user)
-    return redirect("home")
+
 '''
 Log Out Functionality
+
+Executes logout URL
 '''
 @login_required(login_url="login")
 def logout_page(request):
+
     logout(request)
-    return redirect('login')
+    return (
+        redirect('login')
+    )
+
+
+#####################################################################################################
+
 
 '''
 Register Account Page
 
 REDIRECT TO HOME: User is registered in the DB.
+
+Successful POST: User is directed to add profile URL to submit more information
+
 '''
 @csrf_protect
 def register_user(request):
+
     form = UserCreationForm()
 
     if request.method == "POST":
+
         form = UserCreationForm(request.POST)
+
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
-            return redirect('addprofile')
+
+            return (
+                redirect('addprofile')
+            )
+        
         else:
             messages.error(request, 'Error: Registration Issue')
 
@@ -95,9 +144,10 @@ def register_user(request):
         "api/login_register.html",
         {
             'reg_form': form,
-            'data': True,
+            'data': True, # Hide navbar boolean
         },
     )
+
 
 '''
 Create Profile Information
@@ -105,30 +155,46 @@ Create Profile Information
 REDIRECT TO HOME: Profile already exits,
                   User Registers Profile Info
                   User is Guest
+
 '''
 @csrf_protect
 @login_required(login_url="login")
 def register_profile(request):
 
     if profile_exists(request):
-        return redirect("home")
+        return (
+            redirect("home")
+        )
+    
     if is_guest(request):
-        return redirect('home')
+        return (
+            redirect('home')
+        )
 
     if request.method == "POST":
+
         form = UserInformationForm(request.POST)
+
         if form.is_valid():
             info_form = form.save(commit=False)
             info_form.user = request.user
             info_form.save()
-            return redirect('home')
+
+            return (
+                redirect('home')
+            )
         
     form = UserInformationForm()
+
     return render(
         request,
         'api/add_profile.html',
         {'info_form': form},
     )
+
+
+#####################################################################################################
+
 
 '''
 View and Edit Profile Page
@@ -136,24 +202,35 @@ View and Edit Profile Page
 REDIRECT TO HOME: User does not own profile,
                   Profile does not yet exist
                   Guest user submit POST request
+
 '''
 @csrf_protect
 @login_required(login_url="login")
 def user_profile(request):
+
     if not profile_exists(request):
-        return redirect("home")
+        return (
+            redirect("home")
+        )
 
     obj = UserInformation.objects.get(user=request.user)
     
     if obj.user != request.user:
-        return redirect('home')
+        return (
+            redirect('home')
+        )
 
     form = UserInformationForm(instance=obj)
 
     if request.method == "POST":
+
         if is_guest(request):
-            return redirect('profile')
+            return (
+                redirect('profile')
+            )
+        
         form = UserInformationForm(request.POST, instance=obj)
+
         if form.is_valid():
             info_form = form.save(commit=False)
             info_form.user = request.user
@@ -173,16 +250,24 @@ def user_profile(request):
         'api/profile.html',
         context,
     )
-'''
-Home Page
-'''
-#@allow_guest_user
+
+
+#####################################################################################################
+
+
 @login_required(login_url="login")
 def home(request):
-    context = home_context_builder.build_home_context(request)
 
+    # Fetch information from services for the specified user
+    context = (
+        home_context_builder.build_home_context(request)
+    )
+
+    # If profile information does not exist (edge case)
     if context is None:
-        return redirect('addprofile')
+        return (
+            redirect('addprofile')
+        )
     
     return render(
         request,
@@ -190,11 +275,24 @@ def home(request):
         context,
     )
 
+
+#####################################################################################################
+
+
 def about(request):
     return render(
         request,
         'api/about.html'
     )
+
+
+#####################################################################################################
+
+'''
+Graph page for displaying all collected user info
+
+TODO: Fix the graph JS and reopen this URL
+'''
 
 @login_required
 def graph(request, context={}):
@@ -234,10 +332,16 @@ def graph(request, context={}):
         'api/graph.html',
         context,
     )
+
+
 #####################################################################################################
+
 '''
-Logbook views
+Logbooks
+
+TODO: Training log not yet implemented
 '''
+
 LOG_CONFIGS = {
     'weight': {
         'model': WeightLog,
@@ -275,25 +379,55 @@ LOG_CONFIGS = {
     },
 }
 
+
+'''
+The composition log calculates LBM, FM, and BF% based on the units entered on the log
+When a post request is sent, the information is computed here, then the information is saved to the DB
+
+'''
 def _complete_composition_log(request, composition_log):
+
     try:
-        gender = UserInformation.objects.filter(user=request.user).first().gender
-        composition_log.height = UserInformation.objects.get(user=request.user).height
-        composition_log.bodyfat = services.body_composition(gender, composition_log)['body_fat']
-        composition_log.lean_mass = services.body_composition(gender, composition_log)['lean_mass']
-        composition_log.fat_mass = services.body_composition(gender, composition_log)['fat_mass']
+        gender = (
+            UserInformation.objects.filter(user=request.user).first().gender
+        )
+        composition_log.height = (
+            UserInformation.objects.get(user=request.user).height
+        )
+        composition_log.bodyfat = (
+            services.body_composition(gender, composition_log)['body_fat']
+        )
+        composition_log.lean_mass = (
+            services.body_composition(gender, composition_log)['lean_mass']
+        )
+        composition_log.fat_mass = (
+            services.body_composition(gender, composition_log)['fat_mass']
+        )
+
     except UserInformation.DoesNotExist:
         messages.error(request, "Check Profile Configuration")
         raise
+
+
+'''
+Generic log views - All logs share a view where the type is delegated by LOG CONFIGS
+
+'''
 
 @login_required(login_url="login")
 def generic_log_view(request, log_type):
 
     if not profile_exists(request):
-        return redirect('home')
+        return (
+            redirect('home')
+        )
     
     config = LOG_CONFIGS[log_type]
-    queryset = config['model'].objects.filter(user=request.user)
+
+    # All logs for the log_type specified
+    queryset = (
+        config['model'].objects.filter(user=request.user)
+    )
     
     context = {
         'logbook': queryset,
@@ -307,77 +441,100 @@ def generic_log_view(request, log_type):
         context,
     )
 
+
 @csrf_protect
-@login_required(login_url="login") # GUEST blocked from competing POST
+@login_required(login_url="login") 
 def generic_add_log(request, log_type):
 
     if not profile_exists(request):
-        return redirect('home')
+        return (
+            redirect('home')
+        )
     
     config = LOG_CONFIGS[log_type]
+
+    # Send appropriate form for log type
     form_class = config['form']
     
     if request.method == 'POST':
 
+        # POST completed by guest get sent to main log page
         if is_guest(request):
-            return redirect(config['redirect_name'])
+            return (
+                redirect(config['redirect_name'])
+            )
 
         form = form_class(request.POST)
 
         if form.is_valid():
-            log_obj = form.save(commit=False)
+            log_obj = form.save(commit=False) # Do not immediately commit to DB
             log_obj.user = request.user
 
+            # Only composition log - need to convert entered information into BF, LBM, FM
             if config['pre_save']:
+
                 try:
-                    config['pre_save'](request, log_obj)
-                except Exception:
+                    config['pre_save'](request, log_obj) # call complete lambda
+
+                except Exception: # Should never be reached
                     context = {"add_form": form_class(), "type": "add"}
-                    return render(request,
-                                  'api/add_edit.html',
-                                  context,
-                                  )
+                    return (
+                        render(request, 'api/add_edit.html', context)
+                    )
             
-            log_obj.save()
+            log_obj.save() # Commit to DB with completed info from lambda call
+
             return redirect(config['redirect_name'])
     
+
     context = {
         "add_form": form_class(),
         "type": "add",
         'log_info': config['redirect_name'],
     }
-    
-    return render(
-        request,
-        'api/add_edit.html',
-        context,
-                  
+
+    return (
+        render(request, 'api/add_edit.html', context)
     )
 
+
+
 @csrf_protect
-@login_required(login_url="login") # GUEST blocked from competing POST
+@login_required(login_url="login") 
 def generic_edit_log(request, log_type, uuid_key):
 
     config = LOG_CONFIGS[log_type]
-    obj = get_object_or_404(config['model'], id=uuid_key)
+
+    # Grab specific log based on UUID
+    obj = (
+        get_object_or_404(config['model'], id=uuid_key, user=request.user)
+    )
     
     if obj.user != request.user:
         return redirect(config['redirect_name'])
     
+
     if request.method == "POST":
 
         if is_guest(request):
-            return redirect(config['redirect_name'])
+            return (
+                redirect(config['redirect_name'])
+            )
 
-        form = config['form'](request.POST, instance=obj)
+        form = (
+            config['form'](request.POST, instance=obj)
+        )
 
         if form.is_valid():
+
             log_obj = form.save(commit=False)
             log_obj.user = request.user
             
             if config['pre_save']:
+
                 try:
                     config['pre_save'](request, log_obj)
+
                 except Exception:
                     context = {'edit_form': config['form'](instance=obj)}
                     return render(request, 'api/add_edit.html', context)
@@ -398,29 +555,40 @@ def generic_edit_log(request, log_type, uuid_key):
     )
 
 
+
 @csrf_protect
 @login_required(login_url="login")
 def generic_delete_log(request, log_type, uuid_key):
 
     config = LOG_CONFIGS[log_type]
-    obj = get_object_or_404(config['model'], id=uuid_key)
+
+    obj = (
+        get_object_or_404(config['model'], id=uuid_key, user=request.user)
+    )
     
     if obj.user != request.user:
-        return redirect(config['redirect_name'])
+        return (
+            redirect(config['redirect_name'])
+        )
     
     if request.method == "POST":
+
         if is_guest(request):
-            return redirect(config['redirect_name']) # no GUEST
+            return redirect(config['redirect_name']) 
+        
         obj.delete()
         return redirect(config['redirect_name'])
     
     context = {'deleting_object': obj}
+
     return render(
         request,
         'api/delete.html',
         context
     )
 
+
+#####################################################################################################
 
 @login_required(login_url="login")
 def weight_log(request):
