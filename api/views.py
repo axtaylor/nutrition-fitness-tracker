@@ -20,7 +20,6 @@ def profile_exists(request) -> bool:
     except (AttributeError):
         return False
 
-
 '''
 Guest user:
 
@@ -50,8 +49,6 @@ def guest_login(request):
     login(request, guest_user)
 
     return redirect("home")
-
-#####################################################################################################
 
 '''
 Login Page for Registered Users
@@ -105,9 +102,6 @@ def logout_page(request):
     return (
         redirect('login')
     )
-
-
-#####################################################################################################
 
 
 '''
@@ -192,10 +186,6 @@ def register_profile(request):
         {'info_form': form},
     )
 
-
-#####################################################################################################
-
-
 '''
 View and Edit Profile Page
 
@@ -251,10 +241,6 @@ def user_profile(request):
         context,
     )
 
-
-#####################################################################################################
-
-
 @login_required(login_url="login")
 def home(request):
 
@@ -275,18 +261,11 @@ def home(request):
         context,
     )
 
-
-#####################################################################################################
-
-
 def about(request):
     return render(
         request,
         'api/about.html'
     )
-
-
-#####################################################################################################
 
 '''
 Graph page for displaying all collected user info
@@ -333,8 +312,6 @@ def graph(request, context={}):
         context,
     )
 
-
-#####################################################################################################
 
 '''
 Logbooks
@@ -586,9 +563,6 @@ def generic_delete_log(request, log_type, uuid_key):
         'api/delete.html',
         context
     )
-
-
-#####################################################################################################
 
 @login_required(login_url="login")
 def weight_log(request):

@@ -22,9 +22,7 @@ def units(user_units) -> dict[str, str]:
             "height": "",
             "weight": ""
         }
-
-
-
+    
 '''
 BODY COMPOSITION
 
@@ -60,11 +58,7 @@ def body_composition(gender_input, composition_data) -> dict[float, float, float
             'lean_mass': 0,
             'fat_mass': 0,
         }
-
-
-
-
-
+    
 '''
 BODY FAT PROJECTIONS
 
@@ -79,11 +73,7 @@ def body_fat_projections(last_composition_log, target_bf) -> float:
         return round(float(last_composition_log.lean_mass)/(1-(target_bf/100)), 2)
     except Exception:
         return 0
-
-
-
-
-
+    
 '''
 FFMI
 
@@ -120,10 +110,6 @@ def ffmi(last_composition_log, user_information_log) -> float:
     except (Exception, ZeroDivisionError):  
         return 0
 
-
-
-
-
 '''
 Total amount of days logged including gaps.
 
@@ -138,10 +124,6 @@ def days_logged(weight_logs) -> int:
     
     except Exception:  
         return 0
-
-
-
-
 
 '''
 Non unit-agnostic BMI calculation
@@ -161,10 +143,6 @@ def bmi(last_weight_log, user_info) -> float:
     
     except (Exception):
         return 0
-
-
-
-
 
 '''
 Non unit agnostic BMR calculation
@@ -195,10 +173,6 @@ def bmr(last_weight_log, queryset_info) -> float:
         
     except (Exception):
         return 0
-
-
-
-
 
 '''
 NUTRITION INFO
@@ -306,11 +280,6 @@ def nutrition_info(timeframe_to_return: int, weight_logs, nutrition_logs) -> dic
             'avg_carbs': 0.0,
         }
 
-
-
-
-
-
 '''
 PRECURSOR FOR CALORIC PREDICTIONS
 
@@ -344,10 +313,6 @@ def daily_energy_expenditure(type: str, days: int, weight_change: float) -> floa
     except Exception:  
         return 0
 
-
-
-
-
 '''
 CALORIC PREDICTIONS
 
@@ -375,10 +340,6 @@ def energy_targets(daily_energy_expenditure_month: float, daily_consumed_calorie
     except Exception:  
         return 0
     
-
-
-
-
 '''
 ACTIVITY MULTIPLIER
 
@@ -422,10 +383,6 @@ def activity_data(maintenance: float, bmr: float) -> dict[float, float, str]:
             "activity_multiplier": 0.0,
             "activity_level": "",
         }
-
-
-
-
 
 '''
 Create a hashmap dataframe given a log
@@ -515,7 +472,7 @@ def as_dataframe(selected_log, type: str) -> dict[datetime.datetime, Decimal, De
         # This is used to return weight statistics
         # when the user skips some days.
         filled_result = (
-            linear_interpolation_algo(formatted_result)
+            interpolate(formatted_result)
             if type == "weight"
             else []
         )
@@ -540,7 +497,7 @@ def as_dataframe(selected_log, type: str) -> dict[datetime.datetime, Decimal, De
 Interpolation for weight (linear)
 
 '''
-def linear_interpolation_algo(formatted_result: list) -> list[Decimal]:
+def interpolate(formatted_result: list) -> list[Decimal]:
 
     if not formatted_result:
         return []
