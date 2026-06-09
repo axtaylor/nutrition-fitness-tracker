@@ -65,9 +65,9 @@ def build_home_context(request):
     '''
     DataFrame format preview
     '''
-    import pandas as pd
-    test = pd.DataFrame({"Date": data['weight']['labels_28'], "Weight": data['weight']['imputed_data_28']})
-    print(test)
+    #import pandas as pd
+    #test = pd.DataFrame({"Date": data['weight']['labels_28'], "Weight": data['weight']['imputed_data_28']})
+    #print(test)
 
 
     weight_units = (
