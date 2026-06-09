@@ -10,7 +10,7 @@ __pycache__
 !apps.py
 !context_processors.py
 !forms.py
-!home_context_builder.py
+!user_validator.py
 !models.py
 !services.py
 !tests.py
@@ -23,3 +23,6 @@ __pycache__
 
 !/static/scripts/*
 !/static/styles/*
+
+!api/pages/*
+!api/pages/home/*

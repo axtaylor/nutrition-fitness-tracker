@@ -1,9 +1,9 @@
-from .models import WeightLog, CompositionLog, NutritionLog, UserInformation
-from . import views
-from . import services
+from ...models import WeightLog, CompositionLog, NutritionLog, UserInformation
+from ...user_validator import profile_exists, is_guest
+from ... import services
 
 def build_home_context(request):
-    if not views.profile_exists(request):
+    if not profile_exists(request):
         return None
     
     '''
@@ -65,9 +65,9 @@ def build_home_context(request):
     '''
     DataFrame format preview
     '''
-    #import pandas as pd
-    #test = pd.DataFrame({"Date": data['weight']['labels_28'], "Weight": data['weight']['imputed_data_28']})
-    #print(test)
+    import pandas as pd
+    test = pd.DataFrame({"Date": data['weight']['labels_28'], "Weight": data['weight']['imputed_data_28']})
+    print(test)
 
 
     weight_units = (
@@ -202,6 +202,6 @@ def build_home_context(request):
         'activity_multiplier': f"{activity_multiplier:.2f}",
         'projections': projections,
         'activity_level': activity_level,
-        'user': views.is_guest(request),
+        'user': is_guest(request),
         'data': data,
     }
