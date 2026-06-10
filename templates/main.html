@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{% static 'styles/main.css' %}">
     {% load static %}
     <script type="text/javascript" src="{% static 'scripts/navbar.js' %}"></script>
+    <script src="{% static 'scripts/messages_modal.js' %}"></script>
     <title>Nutrition Fitness Tracker</title>
 </head>
 <body>
@@ -17,14 +18,20 @@
         {% load static %}
         <a class="close_navbar"><img class="menu_img" src="{% static 'images/menu.png' %}"></a>
     {% endif %}
-    {% if messages %}
-        <!--
-        <div class="messages">
+
+    {% if messages or lockout_message %}
+    <script id="django_messages" type="application/json">
+        [
             {% for message in messages %}
-                <p{% if message.tags %} class="{{message.tags}}" {% endif %}>{{ message }}</p>
+                {"text": "{{ message }}", "tags": "{{ message.tags }}"}{% if not forloop.last or lockout_message %},{% endif %}
             {% endfor %}
-        </div>-->
+            {% if lockout_message %}
+                {"text": "{{ lockout_message }}", "tags": "error"}
+            {% endif %}
+        ]
+    </script>
     {% endif %}
+
     {% block content %}
     {% endblock %}
 </body>
