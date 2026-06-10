@@ -3,45 +3,36 @@ import json
 import hashlib
 import os
 from dotenv import load_dotenv
+from openai import OpenAI
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from ..models import UserInformation, AIOverviewCache
+from .. import services
+from .home import home_context_builder
 
 load_dotenv()
+
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
 
 if not OPENAI_KEY:
     raise ValueError("API_KEY not found. Please check your .env file.")
 
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
-
-from ..models import UserInformation, AIOverviewCache
-from .. import services
-from .home import home_context_builder
-
-from openai import OpenAI
-
-def ai_analysis(request):
-
-    context = home_context_builder.build_home_context(request)
-
-    if context is None:
-        return redirect('addprofile')
-    
-    if not context["last_weight_log"]:
-        print(None)
-    else:
-        print(context["last_weight_log"].weight)
-
+def ai_analysis(request):    
     return render(
         request,
         'api/ai-analysis.html',
     )
 
-
 def ai_analysis_overview(request):
 
     generate = True
 
-    context = home_context_builder.build_home_context(request)
+    context = (
+        home_context_builder.build_home_context(request)
+    )
+
+    if context is None:
+        return redirect('addprofile')
 
     user_information = (
         UserInformation.objects.filter(user=request.user).first()
@@ -68,50 +59,6 @@ def ai_analysis_overview(request):
         bmi = context["bmi"]
         bmr = context["bmr"]
 
-    weight_change_total = context["weight_change_total"]
-    weight_change_week = context["weight_change_week"]
-    weight_change_month = context["weight_change_month"]
-
-    energy_expenditure_total = context['energy_expenditure_total']
-    energy_expenditure_week = context['energy_expenditure_week']
-    energy_expenditure_month = context['energy_expenditure_month']
-    
-    cut2lbs = context["cut2_cals"]
-    cut1lbs = context["cut_cals"]
-    cuthalflbs = context["cut1_cals"]
-    maintenance_cals = context["maintenance_cals"]
-    bulkhalflbs = context["bulk1_cals"]
-    bulk1lbs = context["bulk_cals"]
-    bulk2lbs = context["bulk2_cals"]
-
-    expenditure_after_bmr = context["activity_calories"]
-    activity_level = context["activity_level"]
-    activity_multiplier = context["activity_multiplier"]
-
-    total_cals, weekly_cals, monthly_cals = (
-    context["total_cals"],
-    context["weekly_cals"],
-    context["monthly_cals"],
-    )
-
-    total_protein, weekly_protein, monthly_protein = (
-        context["total_protein"],
-        context["weekly_protein"],
-        context["monthly_protein"],
-    )
-
-    total_fat, weekly_fat, monthly_fat = (
-        context["total_fat"],
-        context["weekly_fat"],
-        context["monthly_fat"],
-    )
-
-    total_carbs, weekly_carbs, monthly_carbs = (
-        context["total_carbs"],
-        context["weekly_carbs"],
-        context["monthly_carbs"],
-    )
-
     if not context["composition_logs"]:
         body_fat = None
         lbm = None
@@ -123,21 +70,19 @@ def ai_analysis_overview(request):
         fat_mass = context["composition_logs"].fat_mass
         ffmi = context["ffmi"]
 
-    data = context["data"]
 
     weight_month_log = [
     {"date": str(date), "weight_lbs": float(round(weight, 2))}
         for date, weight in zip(
-            data['weight']['labels_28'],
-            data['weight']['imputed_data_28']
+            context["data"]['weight']['labels_28'],
+            context["data"]['weight']['imputed_data_28']
         )
     ]
-
     calories_month_log = [
         {"date": str(date), "calories": cals}
         for date, cals in zip(
-            data['calories']['labels_28'],
-            data['calories']['data_28']
+            context["data"]['calories']['labels_28'],
+            context["data"]['calories']['data_28']
         )
     ]
 
@@ -149,16 +94,16 @@ def ai_analysis_overview(request):
         "weight": str(weight),
         "bmi": str(bmi),
         "bmr": str(bmr),
-        "weight_change_total": weight_change_total,
-        "weight_change_week": weight_change_week,
-        "weight_change_month": weight_change_month,
-        "energy_expenditure_total": energy_expenditure_total,
-        "energy_expenditure_week": energy_expenditure_week,
-        "energy_expenditure_month": energy_expenditure_month,
-        "monthly_cals": monthly_cals,
-        "monthly_protein": monthly_protein,
-        "monthly_fat": monthly_fat,
-        "monthly_carbs": monthly_carbs,
+        "weight_change_total": context["weight_change_total"],
+        "weight_change_week": context["weight_change_week"],
+        "weight_change_month": context["weight_change_month"],
+        "energy_expenditure_total": context['energy_expenditure_total'],
+        "energy_expenditure_week": context['energy_expenditure_week'],
+        "energy_expenditure_month": context['energy_expenditure_month'],
+        "monthly_cals": context["monthly_cals"],
+        "monthly_protein": context["monthly_protein"],
+        "monthly_fat": context["monthly_fat"],
+        "monthly_carbs": context["monthly_carbs"],
         "body_fat": str(body_fat),
         "ffmi": str(ffmi),
     }, sort_keys=True)
@@ -177,8 +122,6 @@ def ai_analysis_overview(request):
         The only data reported by the user is daily weight logs, daily calorie and nutrient logs, and body measurement logs.
         All metrics are calculated using these values for accuracy. Body composition is calculated using US Navy Body Fat measurements.
         Analyze the user's data and provide a comprehensive response containing:
-        <h3><strong>Disclaimer</strong></h3>
-        <p></p>
         <h3><strong>Overall Snapshot</strong></h3>
         <p></p>
         <h3><strong>Weight &amp; Calorie Trend Analysis</strong></h3>
@@ -187,24 +130,29 @@ def ai_analysis_overview(request):
         <p></p>
         <h3><strong>Activity Summary</strong></h3>
         <p></p>
+        <h3><strong>Disclaimer</strong></h3>
+        <p></p>
         Wrap all text in a <p></p> element.
+        Ensure to mention:
+        Protein relative to bodyweight (g/lb or g/kg)
         """
 
         user_data = f"""
         User profile and units: {gender}, {height}{units_height}, {weight}{units_weight}
         BMI: {bmi}
         BMR: {bmr} kcal
-        Activity: {activity_level}, {activity_multiplier}, {expenditure_after_bmr} kcal over BMR)
-        Maintenance: {maintenance_cals} kcal
-        Weight change - all-time: {weight_change_total}{units_weight} | 7d: {weight_change_week}{units_weight} | 28d: {weight_change_month}{units_weight}
-        Daily cal deficit/surplus - all-time: {energy_expenditure_total} | 7d: {energy_expenditure_week} | 28d: {energy_expenditure_month}
-        28-day averages: {monthly_cals} kcal | {monthly_protein}g protein | {monthly_fat}g fat | {monthly_carbs}g carbs
+        Activity: {context["activity_level"]}, {context["activity_multiplier"]}, {context["activity_calories"]} kcal over BMR)
+        Maintenance: {context["maintenance_cals"]} kcal
+        Weight change - all-time: {context["weight_change_total"]}{units_weight} | 7d: {context["weight_change_week"]}{units_weight} | 28d: {context["weight_change_month"]}{units_weight}
+        Daily cal deficit/surplus - all-time: {context['energy_expenditure_total']} | 7d: {context['energy_expenditure_week']} | 28d: {context['energy_expenditure_month']}
+        28-day averages: {context["monthly_cals"]} kcal | {context["monthly_protein"]}g protein | {context["monthly_fat"]}g fat | {context["monthly_carbs"]}g carbs
         Body composition: {body_fat}% BF | LBM: {lbm}{units_weight} | Fat mass: {fat_mass}{units_weight} | FFMI: {ffmi}
         Body Fat percentage projections: {projection_vars}
         JSON Weight Month Log: {weight_month_log}
         JSON Calories Month Log: {calories_month_log} (Monitor for old data)
         """
 
+        print(system_prompt+user_data)
         try:
             client = OpenAI(
               base_url="https://openrouter.ai/api/v1",
@@ -226,8 +174,7 @@ def ai_analysis_overview(request):
             extra_body={"reasoning": {"enabled": True}}
             )
 
-            response_text = response.choices[0].message.content  
-            html_response = markdown.markdown(response_text)
+            html_response = markdown.markdown(response.choices[0].message.content)
 
             AIOverviewCache.objects.update_or_create(
                 user=request.user,
@@ -240,10 +187,13 @@ def ai_analysis_overview(request):
             return HttpResponse(html_response)
         
         except Exception as e:
+
             print(f"AI Overview error: {e}")
+
             if cache:
                 return HttpResponse(cache.response_html)
-            return HttpResponse("AI Overview is currently unavailable. Please try again momentarily.")
+            
+            return HttpResponse("<span>AI Overview is currently unavailable. Please try again momentarily.</span>")
 
     else:
         error_message = "<span>Begin tracking to use AI overview features!</span>"
