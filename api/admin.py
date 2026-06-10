@@ -9,6 +9,7 @@ admin.site.register(models.NutritionLog)
 admin.site.register(models.CompositionLog)
 admin.site.register(models.TrainingLog)
 admin.site.register(models.UserInformation)
+admin.site.register(models.AIOverviewCache)
 
 '''
 DB link UserInfo and User

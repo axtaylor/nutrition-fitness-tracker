@@ -44,6 +44,10 @@ def ai_analysis(request):
     return _ai_analysis.ai_analysis(request)
 
 @login_required(login_url="login")
+def ai_analysis_overview(request):
+    return _ai_analysis.ai_analysis_overview(request)
+
+@login_required(login_url="login")
 def about(request):
     return _about.about(request)
 

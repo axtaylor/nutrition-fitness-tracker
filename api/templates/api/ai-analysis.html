@@ -1,15 +1,38 @@
 {% extends 'main.html' %}
 {% block content %}
+<script src="https://unpkg.com/htmx.org@2.0.4"></script>
 
 <div class="system_header large">
     <h1>Nutrition Fitness Tracker</h1>
 </div>
 
+{% if not has_user_profile %}
 <div class="about_container">
     {% load static %}
     <img class="big_logo" src="{% static 'images/ntf.png' %}">
-    <h2>Coming Soon</h2>
-    <br>
+    <h2>Welcome to Nutrition Fitness Tracker</h2>
+    <p>Select 'Finish Registration' from the menu to complete your account registration</p>
+</div>
+{% else %}
+
+
+<div class="double_grid_container">
+    <div class="ai_container"> 
+
+        <h2 class="form_heading_area">AI Overview</h2>
+        <hr>
+
+        <div hx-get="{% url 'ai_analysis_overview' %}" hx-trigger="load" hx-swap="innerHTML">
+            <div class="ai-skeleton">
+                <div class="ai-skeleton-line"></div>
+                <div class="ai-skeleton-line short"></div>
+                <div class="ai-skeleton-line"></div>
+                <div class="ai-skeleton-line short"></div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
+{% endif %}
 {% endblock content %}

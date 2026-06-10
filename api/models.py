@@ -3,6 +3,15 @@ from django.contrib.auth.models import User
 import uuid
 
 # Create your models here.
+
+class AIOverviewCache(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    response_html = models.TextField()
+    data_hash = models.CharField(max_length=64)
+    generated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"AIOverviewCache data for {self.user}"
  
 class WeightLog(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -74,6 +83,3 @@ class UserInformation(models.Model):
                                       ("Imperial", "Imperial"),
                                       ("Metric", "Metric"),
                                     ])
-
-
-

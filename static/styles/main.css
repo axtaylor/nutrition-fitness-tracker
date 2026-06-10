@@ -124,7 +124,8 @@ nav.hidden { transform: translateX(-100%); }
     padding: 2.5em 1em;
   
 }
-.generic_forms_container, .log_entries {
+
+.generic_forms_container, .log_entries{
     background: var(--WHITE);
     width: min(80vw, 600px);
     border-radius: 16px;
@@ -135,7 +136,6 @@ nav.hidden { transform: translateX(-100%); }
 }
 .generic_forms_container.profile{width: unset;}
 .generic_forms_container.delete {width: min(80vw, 400px); text-align: center; margin-top: 7em;}
-
 
 .form_heading_area { text-align: center; margin-bottom: 24px;}
 .form_heading_area.with_button {display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;}
@@ -408,3 +408,69 @@ select:focus {
 @media (max-width: 768px) { .chart { padding: 1.2em 1em 10em 1em; width: min(88vw, 1200px);}}
 @media (min-width: 1100px) { .chart { width: 70vw}}
 #data-selector { border-radius: 1.25em; }
+
+.ai_container{
+    background: var(--WHITE);
+    width: unset;
+    border-radius: 16px;
+    padding: 2em;
+    box-shadow:
+         0 10px 15px -3px rgba(0, 0, 0, 0.1),
+         0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Skeleton loader */
+.ai-skeleton {
+    padding: 1rem 0;
+}
+
+.ai-skeleton-line {
+    height: 14px;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+
+.ai-skeleton-line.short {
+    width: 60%;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* AI response content */
+.ai_container h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1.25rem 0 0.4rem;
+    color: #1a1a1a;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
+}
+
+.ai_container p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: #444;
+    margin-bottom: 0.15rem;
+}
+
+.ai_container ul {
+    padding-left: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.ai_container li {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: #444;
+    margin-bottom: 0.4rem;
+}
+
+.ai_container strong {
+    color: #1a1a1a;
+}
