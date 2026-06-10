@@ -419,6 +419,12 @@ select:focus {
          0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+.ai_container span {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5em;
+}
+
 /* Skeleton loader */
 .ai-skeleton {
     padding: 1rem 0;

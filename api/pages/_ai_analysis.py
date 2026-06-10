@@ -246,5 +246,5 @@ def ai_analysis_overview(request):
             return HttpResponse("AI Overview is currently unavailable. Please try again momentarily.")
 
     else:
-        error_message = "Begin tracking to use AI overview features!"
+        error_message = "<span>Begin tracking to use AI overview features!</span>"
         return HttpResponse(error_message)
