@@ -2,7 +2,7 @@
 
 [www.nutrition-fitness-tracker.ca/](https://www.nutrition-fitness-tracker.ca)
 
-Advanced monitoring utility for fitness, bodyweight, body composition, and caloric predictions and analysis.
+AI driven monitoring utility for fitness, bodyweight, body composition, and caloric predictions and analysis.
 
 ---
 
@@ -13,6 +13,10 @@ Nutrition Fitness Tracker is a comprehensive web application designed to help us
 ---
 
 ## Features
+
+### AI-Integration
+
+- Personalized reports driven by LLM responses suited to your specific goals and health metrics
 
 ### Caloric Prediction & Analysis
 - Dynamic calorie recommendations tailored for weight loss, weight gain, and maintenance goals
