@@ -24,6 +24,8 @@ def register_user(request):
             user.username = user.username.lower()
             user.save()
 
+            messages.success(request, 'Your account creation was successful.')
+
             return (
                 redirect('addprofile')
             )
