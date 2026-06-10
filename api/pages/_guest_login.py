@@ -8,6 +8,6 @@ def guest_login(request):
         User.objects.get(username="temporary_user")
     )
 
-    login(request, guest_user)
+    login(request, guest_user, backend='django.contrib.auth.backends.ModelBackend')
 
     return redirect("home")
