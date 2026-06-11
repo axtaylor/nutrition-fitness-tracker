@@ -5,6 +5,7 @@ from ..user_validator import profile_exists, is_guest
 
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db import IntegrityError
 
 '''
 Logbooks
@@ -145,7 +146,13 @@ def generic_add_log(request, log_type):
                         render(request, 'api/add_edit.html', context)
                     )
             
-            log_obj.save() # Commit to DB with completed info from lambda call
+            try:
+                log_obj.save() # Commit to DB with completed info from lambda call
+            except IntegrityError:
+                messages.error(request, 'A log entry for this date already exists.')
+                return (
+                    redirect(f"add{config['redirect_name']}")
+                )
 
             return redirect(config['redirect_name'])
     
@@ -199,7 +206,14 @@ def generic_edit_log(request, log_type, uuid_key):
                     context = {'edit_form': config['form'](instance=obj)}
                     return render(request, 'api/add_edit.html', context)
             
-            log_obj.save()
+            try:
+                log_obj.save() 
+            except IntegrityError:
+                messages.error(request, 'A log entry for this date already exists.')
+                return (
+                    redirect(f"edit{config['redirect_name']}")
+                )
+            
             return redirect(config['redirect_name'])
     
     form = config['form'](instance=obj)

@@ -22,6 +22,9 @@ class WeightLog(models.Model):
 
     class Meta():
         ordering = ["user", "-date"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "date"], name="unique_weight_per_user_date")
+        ]
 
 class NutritionLog(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -35,6 +38,9 @@ class NutritionLog(models.Model):
 
     class Meta():
         ordering = ["user", "-date"]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "date"], name="unique_nutrition_per_user_date")
+        ]
 
 
 class CompositionLog(models.Model):
@@ -57,6 +63,7 @@ class CompositionLog(models.Model):
 
     class Meta():
         ordering = ["user", "-date"]
+    
 
 class TrainingLog(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
