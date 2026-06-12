@@ -34,10 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 <p class="pop_content">
                 To optimize your recommendations, it is recommended to track your consumption
                 on a daily basis.</p>
-
-                <p class="pop_content">
-                It is recommended to track consumption using nutrition labels and weighing portions.
-                AI calorie photo scanners are inaccurate and will generate unreliable results.</p>
             </div>
         </div>
     `;

@@ -9,7 +9,23 @@
 <div class="container">
     <form class="generic_forms_container" method="POST" action="">
         <div class ="form_heading_area with_button">
-            <h2> {% if type == "add" %}Add Entry{% else %}Edit Entry{% endif %}</h2>
+            <h2> 
+            {% if type == "add" %}
+                Add
+                {% if log_info == "nutritionlog" %}Nutrition Log
+                {% elif log_info == "weightlog" %}Weight Log
+                {% elif log_info == "compositionlog" %}Composition Log
+                {% else %}Training Log
+                {% endif %}
+            {% else %}
+                Edit
+                {% if log_info == "nutritionlog" %}Nutrition Log
+                {% elif log_info == "weightlog" %}Weight Log
+                {% elif log_info == "compositionlog" %}Composition Log
+                {% else %}Training Log
+                {% endif %}
+            {% endif %}
+            </h2>
             <a class="button circle_button">?</a>
         </div>
         <hr>
@@ -19,7 +35,7 @@
 
     
         <div class="add-food">
-            <button type="button" class="button" id="openFoodModal">+ Add Individual Item</button>
+            <button type="button" class="button" id="openFoodModal">Add Food Item</button>
         </div>
         <div id="foodList"></div>
         <div id="foodTotals">
@@ -45,7 +61,7 @@
             <div class="model-content" id="foodModelContent">
             
                 <span class="close_button" id="closeFoodModal">&times;</span>
-                <h3 class="modal-title">Add Food</h3>
+                <h3 class="modal-title">Nutrition Menu</h3>
                 <div id="foodModalError" class="food-modal-error hidden-food"></div>
                 <hr>
             
@@ -69,7 +85,7 @@
                 <div class="tab-panel hidden-food" id="tab-custom">
                     <div class="pop_content">
                         <label>Name</label>
-                        <input type="text" id="customName" placeholder="Food name"/>
+                        <input type="text" id="customName" placeholder=""/>
                     </div>
                     <div class="pop_content">
                         <label>Calories</label>
