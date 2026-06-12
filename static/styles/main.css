@@ -676,3 +676,30 @@ h3 {
     border-radius: 6px;
     background-color: #fff0f0;
 }
+.food-list-name,
+.food-list-macros {
+    cursor: pointer;
+}
+.food-list-item:hover .food-list-name {
+    text-decoration: underline;
+}
+
+#myFoodList {
+    max-height: 260px;
+    overflow-y: auto;
+    margin-top: 0.5em;
+}
+
+.my-food-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em 0.4em;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9em;
+}
+
+.my-food-item:last-child { border-bottom: none; }
+.my-food-item .food-name { font-weight: 500; }
+.my-food-item .food-macros { color: #656565; font-size: 0.85em; }
+.my-food-item button { padding: 0.25em 0.6em; }

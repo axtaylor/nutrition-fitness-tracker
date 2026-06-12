@@ -19,7 +19,7 @@
 
     
         <div class="add-food">
-            <button type="button" class="button" id="openFoodModal">+ Add Individual Food Item</button>
+            <button type="button" class="button" id="openFoodModal">+ Add Individual Item</button>
         </div>
         <div id="foodList"></div>
         <div id="foodTotals">
@@ -51,7 +51,8 @@
             
 
                 <div class="food-modal-tabs">
-                    <button type="button" class="tab-btn active" data-tab="search">Search</button>
+                    <button type="button" class="tab-btn hidden-food" data-tab="search">Search</button>
+                    <button type="button" class="tab-btn active" data-tab="myfood">Search</button>
                     <button type="button" class="tab-btn" data-tab="custom">Custom Entry</button>
                 </div>
             
@@ -89,6 +90,13 @@
                     <div class="pop_content">
                         <button type="button" class="button" id="addCustomFood">Add Food</button>
                     </div>
+                </div>
+
+                <div class="tab-panel hidden-food" id="tab-myfood">
+                    <div class="food-search-bar pop_content">
+                        <input type="text" id="myFoodSearch" placeholder="Search"/>
+                    </div>
+                    <div id="myFoodList" class="pop_content"></div>
                 </div>
             
             </div>

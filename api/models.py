@@ -31,10 +31,10 @@ class NutritionLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     date = models.DateField(null=False)
 
-    calories = models.IntegerField(null=False, default=0)
-    protein = models.IntegerField(null=False, default=0)
-    fat = models.IntegerField(null=False, default=0)
-    carbs = models.IntegerField(null=False, default=0)
+    calories = models.DecimalField(null=False, default=0, decimal_places=2, max_digits=12)
+    protein = models.DecimalField(null=False, default=0, decimal_places=2, max_digits=12)
+    fat = models.DecimalField(null=False, default=0, decimal_places=2, max_digits=12)
+    carbs = models.DecimalField(null=False, default=0, decimal_places=2, max_digits=12)
     response_html = models.TextField(null=True, blank=True, default=" ")
 
     class Meta():
