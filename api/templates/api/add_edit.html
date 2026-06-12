@@ -13,6 +13,90 @@
             <a class="button circle_button">?</a>
         </div>
         <hr>
+
+        {% if log_info == "nutritionlog" %}
+        <script type="text/javascript" src="{% static 'scripts/food_pop_up.js' %}"></script>
+
+    
+        <div class="add-food">
+            <button type="button" class="button" id="openFoodModal">+ Add Individual Food Item</button>
+        </div>
+        <div id="foodList"></div>
+        <div id="foodTotals">
+            <div class="total-item">
+                <span class="total-label">Calories</span>
+                <span class="total-value" id="totalCalories">0</span>
+            </div>
+            <div class="total-item">
+                <span class="total-label">Protein</span>
+                <span class="total-value" id="totalProtein">0g</span>
+            </div>
+            <div class="total-item">
+                <span class="total-label">Fat</span>
+                <span class="total-value" id="totalFat">0g</span>
+            </div>
+            <div class="total-item">
+                <span class="total-label">Carbs</span>
+                <span class="total-value" id="totalCarbs">0g</span>
+            </div>
+        </div>
+
+        <div id="foodModal" class="model_pop">
+            <div class="model-content" id="foodModelContent">
+            
+                <span class="close_button" id="closeFoodModal">&times;</span>
+                <h3 class="modal-title">Add Food</h3>
+                <div id="foodModalError" class="food-modal-error hidden-food"></div>
+                <hr>
+            
+
+                <div class="food-modal-tabs">
+                    <button type="button" class="tab-btn active" data-tab="search">Search</button>
+                    <button type="button" class="tab-btn" data-tab="custom">Custom Entry</button>
+                </div>
+            
+
+                <div class="tab-panel" id="tab-search">
+                    <div class="pop_content food-search-bar">
+                        <input type="text" id="foodSearchInput" placeholder="e.g. chicken breast..."/>
+                        <button type="button" class="button" id="foodSearchBtn">Search</button>
+                    </div>
+                    <div class="pop_content" id="searchResults"></div>
+                </div>
+            
+
+                <div class="tab-panel hidden-food" id="tab-custom">
+                    <div class="pop_content">
+                        <label>Name</label>
+                        <input type="text" id="customName" placeholder="Food name"/>
+                    </div>
+                    <div class="pop_content">
+                        <label>Calories</label>
+                        <input type="number" id="customCalories" placeholder="kcal" min="0"/>
+                    </div>
+                    <div class="pop_content">
+                        <label>Protein (g)</label>
+                        <input type="number" id="customProtein" placeholder="g" min="0"/>
+                    </div>
+                    <div class="pop_content">
+                        <label>Fat (g)</label>
+                        <input type="number" id="customFat" placeholder="g" min="0"/>
+                    </div>
+                    <div class="pop_content">
+                        <label>Carbs (g)</label>
+                        <input type="number" id="customCarbs" placeholder="g" min="0"/>
+                    </div>
+                    <div class="pop_content">
+                        <button type="button" class="button" id="addCustomFood">Add Food</button>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+
+        {% endif %}
+
+
         {% if type == "add" %}
         {% csrf_token %}
         <div class="django_forms">{{add_form.as_p}}</div>
@@ -23,8 +107,8 @@
         {% else %}
         {% csrf_token %}
         <div class="django_forms">{{edit_form.as_p}}</div>
-        <div><input class ="button single" type="submit" value="Done"/></div>
+        <div><input class ="button single" type="submit" value="Done" id="editButton"/></div>
         {% endif %}
-    </form>
+    </form> 
 </div>
 {% endblock content %}

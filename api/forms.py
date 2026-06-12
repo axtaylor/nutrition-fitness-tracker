@@ -16,7 +16,7 @@ class WeightLogForm(ModelForm):
 class NutritionLogForm(ModelForm):
     class Meta:
         model = models.NutritionLog
-        fields = ['date', 'calories', 'protein', 'fat', 'carbs']
+        fields = ['date', 'calories', 'protein', 'fat', 'carbs', 'response_html']
         widgets = {
         'date': forms.DateInput(attrs={
         'type': 'date',

@@ -35,6 +35,7 @@ class NutritionLog(models.Model):
     protein = models.IntegerField(null=False, default=0)
     fat = models.IntegerField(null=False, default=0)
     carbs = models.IntegerField(null=False, default=0)
+    response_html = models.TextField(null=True, blank=True, default=" ")
 
     class Meta():
         ordering = ["user", "-date"]

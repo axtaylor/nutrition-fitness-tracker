@@ -151,7 +151,7 @@ def generic_add_log(request, log_type):
             except IntegrityError:
                 messages.error(request, 'A log entry for this date already exists.')
                 return (
-                    redirect(f"add{config['redirect_name']}")
+                    redirect(f"{config['redirect_name']}")
                 )
 
             return redirect(config['redirect_name'])
