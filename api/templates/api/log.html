@@ -22,10 +22,10 @@
                     <h2>{{entry.date}}</h2>
                     <ul>
                         {% if type == 'nutrition' %}
-                            <li>Calories: {{entry.calories}}</li>
-                            <li>Protein: {{entry.protein}}g</li>
-                            <li>Fat: {{entry.fat}}g</li>
-                            <li>Carbs: {{entry.carbs}}g</li>
+                            <li>Calories: {{entry.calories|floatformat:0}}</li>
+                            <li>Protein: {{entry.protein|floatformat:0}}g</li>
+                            <li>Fat: {{entry.fat|floatformat:0}}g</li>
+                            <li>Carbs: {{entry.carbs|floatformat:0}}g</li>
                         {% elif type == 'composition' %}
                             <li>Body Fat: {{entry.bodyfat}}%</li>
                             <li>Lean Mass: {{entry.lean_mass}}{{weight}}</li>
