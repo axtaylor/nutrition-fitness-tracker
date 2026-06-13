@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('id_date').insertAdjacentHTML('afterend', `
-        <p class="manual-totals-label">Or Manually Enter Daily Totals</p>
+        <p class="manual-totals-label">Manually Enter Daily Totals</p>
     `);
 
     document.getElementById('id_response_html').closest('p').classList.add('hidden-food');
@@ -12,22 +12,28 @@ document.addEventListener('DOMContentLoaded', function () {
     // My Foods data
     // -------------------------------------------------------------------------
     const _savedFoods = [
+        { name: 'Chicken Breast (100g)',               calories: 165,  protein: 31,    fat: 3.6,    carbs: 0  },
+        { name: '85% Lean Ground Beef (85g)',               calories: 218,  protein: 24,    fat: 13,    carbs: 0  },
+        { name: 'Greek Yogurt (115g)',               calories: 100,  protein: 9,    fat: 2,    carbs: 12  },
+        { name: 'Banana (118g)',                            calories: 105,   protein: 1.2,   fat: 0.3,  carbs: 24  },
+        { name: 'Egg (53g)',               calories: 70,  protein: 6,    fat: 5,    carbs: 1  },
+        { name: 'Cheddar Cheese (30g)',                          calories: 120,   protein: 7,     fat: 10,    carbs: 0   },
+        { name: 'Cheese Curds (28g)',                          calories: 110,   protein: 6,     fat: 8,    carbs: 1   },
+        { name: 'Processed Cheese Slice',                          calories: 50,   protein: 3,     fat: 4,    carbs: 1   },
+        { name: 'Whey Protein Isolate',               calories: 130,  protein: 30,    fat: 0.5,    carbs: 1  },
         { name: 'Premier Protein Shake',             calories: 160,  protein: 30,    fat: 3,    carbs: 5   },
         { name: 'Fairlife Core Power 42g',               calories: 230,  protein: 42,    fat: 3.5,  carbs: 14  },
         { name: 'Fairlife Core Power 26g',               calories: 170,  protein: 26,    fat: 3,    carbs: 11  },
         { name: "McDonald's Double Big Mac",                    calories: 740,  protein: 38,    fat: 44,   carbs: 48  },
         { name: "McDonald's Spicy Bacon Deluxe McCrispy",     calories: 580,  protein: 34,    fat: 30,   carbs: 46  },
-        { name: "Osmows Chicken Shawarma Poutine",      calories: 1165, protein: 37.87,  fat: 71.4, carbs: 81},
-        { name: "Osmows Chicken on the Rocks",      calories: 857, protein: 40,  fat: 37.1, carbs: 81.33},
-        { name: "Crave Buffalo Chicken Dinner",      calories: 570, protein: 24,  fat: 28, carbs: 56},
-        { name: "Crave Bacon Macaroni Dinner",      calories: 530, protein: 25,  fat: 23, carbs: 55},
+        { name: "McDonald's Jr. Chicken",     calories: 380,  protein: 12,    fat: 21,   carbs: 36  },
         { name: "Wendy's Spicy Asiago Ranch Chicken Club", calories: 590, protein: 33, fat: 30, carbs: 48},
         { name: "Wendy's Jr. Bacon Cheeseburger", calories: 390, protein: 19, fat: 24, carbs: 25},
         { name: "Wendy's Baconator Fries", calories: 410, protein: 12, fat: 23, carbs: 38},
-        // Add here
-        { name: 'Cheese Slice',                          calories: 50,   protein: 3,     fat: 4,    carbs: 1   },
-        { name: 'Cheese Curds',                          calories: 110,   protein: 6,     fat: 8,    carbs: 1   },
-
+        { name: "Crave Buffalo Chicken Dinner",      calories: 570, protein: 24,  fat: 28, carbs: 56},
+        { name: "Crave Bacon Macaroni Dinner",      calories: 530, protein: 25,  fat: 23, carbs: 55},
+        { name: "Osmows Chicken Shawarma Poutine",      calories: 1165, protein: 37.87,  fat: 71.4, carbs: 81},
+        { name: "Osmows Chicken on the Rocks",      calories: 857, protein: 40,  fat: 37.1, carbs: 81.33},
     ];
 
     function showModalError(message) {
@@ -129,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function clearEditState() {
         _editingItem = null;
-        document.getElementById('addCustomFood').textContent = 'Add Food';
+        document.getElementById('addCustomFood').textContent = 'Add';
         document.getElementById('customName').value     = '';
         document.getElementById('customCalories').value = '';
         document.getElementById('customProtein').value  = '';
@@ -194,10 +200,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
         foodTotals.style.display = 'flex';
         toggleManualFields(true);
+        let protein_pct = ((totals.protein*4)/totals.calories)*100;
+        let fat_pct = ((totals.fat*9)/totals.calories)*100;
+        let carb_pct = ((totals.carbs*4)/totals.calories)*100;
+        let extra = 100-(protein_pct+fat_pct+carb_pct);
+        fat_pct+=extra;
+
         document.getElementById('totalCalories').textContent = totals.calories.toFixed(1);
-        document.getElementById('totalProtein').textContent  = totals.protein.toFixed(1)  + 'g';
-        document.getElementById('totalFat').textContent      = totals.fat.toFixed(1)      + 'g';
-        document.getElementById('totalCarbs').textContent    = totals.carbs.toFixed(1)    + 'g';
+        document.getElementById('totalProtein').textContent  = totals.protein.toFixed(1)  + 'g'
+        document.getElementById('totalFat').textContent      = totals.fat.toFixed(1)      + 'g'
+        document.getElementById('totalCarbs').textContent    = totals.carbs.toFixed(1)    + 'g'
+
+        document.getElementById('totalProteinPct').textContent  = '(' + protein_pct.toFixed(1) + '%)';
+        document.getElementById('totalFatPct').textContent      = '(' + fat_pct.toFixed(1) + '%)';
+        document.getElementById('totalCarbsPct').textContent    = '(' + carb_pct.toFixed(1) + '%)';
     };
 
     // -------------------------------------------------------------------------

@@ -35,25 +35,28 @@
 
     
         <div class="add-food">
-            <button type="button" class="button" id="openFoodModal">Add Food Item</button>
+            <button type="button" class="button" id="openFoodModal">Add Nutrition Item</button>
         </div>
         <div id="foodList"></div>
         <div id="foodTotals">
             <div class="total-item">
                 <span class="total-label">Calories</span>
-                <span class="total-value" id="totalCalories">0</span>
+                <span class="total-value calories" id="totalCalories">0</span>
             </div>
             <div class="total-item">
                 <span class="total-label">Protein</span>
                 <span class="total-value" id="totalProtein">0g</span>
+                <span class="total-value pct" id="totalProteinPct">0%</span>
             </div>
             <div class="total-item">
                 <span class="total-label">Fat</span>
                 <span class="total-value" id="totalFat">0g</span>
+                <span class="total-value pct" id="totalFatPct">0%</span>
             </div>
             <div class="total-item">
                 <span class="total-label">Carbs</span>
                 <span class="total-value" id="totalCarbs">0g</span>
+                <span class="total-value pct" id="totalCarbsPct">0%</span>
             </div>
         </div>
 
@@ -61,7 +64,7 @@
             <div class="model-content" id="foodModelContent">
             
                 <span class="close_button" id="closeFoodModal">&times;</span>
-                <h3 class="modal-title">Nutrition Menu</h3>
+                <h3 class="modal-title">Add Nutrition</h3>
                 <div id="foodModalError" class="food-modal-error hidden-food"></div>
                 <hr>
             
@@ -84,27 +87,27 @@
 
                 <div class="tab-panel hidden-food" id="tab-custom">
                     <div class="pop_content">
-                        <label>Name</label>
-                        <input type="text" id="customName" placeholder=""/>
+                        <p>Item</p>
+                        <input type="text" id="customName" placeholder="Food item"/>
                     </div>
                     <div class="pop_content">
-                        <label>Calories</label>
+                        <p>Calories</p>
                         <input type="number" id="customCalories" placeholder="kcal" min="0"/>
                     </div>
                     <div class="pop_content">
-                        <label>Protein (g)</label>
+                        <p>Protein (g)</p>
                         <input type="number" id="customProtein" placeholder="g" min="0"/>
                     </div>
                     <div class="pop_content">
-                        <label>Fat (g)</label>
+                        <p>Fat (g)</p>
                         <input type="number" id="customFat" placeholder="g" min="0"/>
                     </div>
                     <div class="pop_content">
-                        <label>Carbs (g)</label>
+                        <p>Carbs (g)</p>
                         <input type="number" id="customCarbs" placeholder="g" min="0"/>
                     </div>
                     <div class="pop_content">
-                        <button type="button" class="button" id="addCustomFood">Add Food</button>
+                        <button type="button" class="button" id="addCustomFood">Add</button>
                     </div>
                 </div>
 
