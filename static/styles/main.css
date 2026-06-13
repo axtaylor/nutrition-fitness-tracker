@@ -482,7 +482,7 @@ select:focus {
     top: 0;
     width: 100%;
     height: 100%; 
-    overflow: hidden;
+    overflow: auto;
     font-size: 1.125em;
     background-color: rgba(0, 0, 0, 0.3);
     line-height: 1.5;
@@ -526,10 +526,10 @@ select:focus {
 
 
 
-
+@media (max-width: 762px) { #foodModelContent { margin: 5.25em auto; } }
+@media (min-width: 762px) { #foodModelContent { margin: 4em auto; } }
 #foodModelContent {
     width: min(75vw, 925px);
-    margin: 5.25em auto;
 }
 .manual-totals-label {
     text-align: center;
@@ -605,7 +605,7 @@ select:focus {
     padding: 0.4em 0.6em;
     border: 1px solid #ccc;
     border-radius: 6px;
-    font-size: 1em;
+    font-size: 0.9em;
     box-sizing: border-box;
     margin-top: 0.25em;
 }
@@ -652,6 +652,7 @@ select:focus {
     justify-content: space-between;
     padding: 0.75em;
     margin-top: 2em;
+    margin-bottom: -0.5em;
     border-top: 2px solid #eee;
     font-size: 0.9em;
 }
@@ -663,6 +664,8 @@ select:focus {
 }
 .total-label { color: #656565; font-size: 0.8em; }
 .total-value { font-weight: 600; }
+.total-value.pct { font-weight: 400; margin-top: 0.1em; }
+
 
 #editButton{
     margin-top: 2.5em;
@@ -686,9 +689,8 @@ select:focus {
 }
 
 #myFoodList {
-    max-height: 260px;
-    overflow-y: auto;
-    margin-top: 0.5em;
+    max-height: 375px;
+    overflow-y: auto;   margin-top: 0.5em;
 }
 
 .my-food-item {
@@ -705,6 +707,7 @@ select:focus {
 .my-food-item .food-macros { color: #656565; font-size: 0.85em; }
 .my-food-item button { padding: 0.25em 0.6em; }
 
-.pop_content label {
-    font-size: 0.9em;
+.pop_content p {
+    font-size: 0.8em;
+    font-weight: 500;
 }
