@@ -123,7 +123,7 @@ def build_home_context(request):
     Calculate how many calories someone is burning per day by time frame and weight change
     '''
     energy_expenditures = {
-        period: services.daily_energy_expenditure(period, days, change)
+        period: services.daily_energy_expenditure(period, days, change, weight_units)
         for period, change in zip(['week', 'month', 'total'], [weight_change_week, weight_change_month, weight_change_total])
     }
 

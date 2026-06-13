@@ -31,18 +31,35 @@ Used to complete the composition log after the user enters measurements
 unit-agnostic metric/imperial
 
 '''
-def body_composition(gender_input, composition_data) -> dict[float, float, float]:
+def body_composition(gender_input, composition_data, units) -> dict[float, float, float]:
     try:
+        print(units)
+        if units == "Metric":
+            multiplier = 0.393701
+        else:
+            multiplier = 1
+
         # Male body fat percentage
         if gender_input == "Male":
             bf = (
-                86.010*math.log10(composition_data.waist-composition_data.neck)-70.041*math.log10(composition_data.height)+36.76
+                86.010*math.log10(
+                (float(composition_data.waist)*multiplier)-(float(composition_data.neck)*multiplier)
+                )
+                -70.041*math.log10(
+                float(composition_data.height)*multiplier
+                )
+                +36.76
             )
         else: # Female body fat percentage
             bf = (
-                163.205*math.log10(composition_data.waist+composition_data.hips-composition_data.neck)-97.684*math.log10(composition_data.height)-78.387
+                163.205*math.log10(
+                (float(composition_data.waist)*multiplier)+(float(composition_data.hips)*multiplier)-(float(composition_data.neck)*multiplier)
+                )
+                -97.684*math.log10(
+                (float(composition_data.height)*multiplier)
+                )
+                -78.387
             )
-
         lean_mass, fat_mass = (
             float(composition_data.weight)-(float(composition_data.weight)*((bf/100))),
             float(composition_data.weight)*(bf/100)
@@ -138,7 +155,7 @@ def bmi(last_weight_log, user_info) -> float:
         return (
             ((weight/(height**2))*703)
             if units == "Imperial" else
-            (weight/(height**2))
+            (weight/(height**2))*10000
         )
     
     except (Exception):
@@ -288,7 +305,12 @@ expending or holding, given their weight change,
 over three different time frames.
 
 '''
-def daily_energy_expenditure(type: str, days: int, weight_change: float) -> float:
+def daily_energy_expenditure(type: str, days: int, weight_change: float, units: str) -> float:
+
+    # Conversion hardcodes 500calories weekly deficit to 1lb weight loss
+    if units == "kg":
+        weight_change = float(weight_change) * 2.20462
+
     try:
         # Receives weight changes list len(7) -> already in weekly
         if type == 'week':

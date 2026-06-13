@@ -62,17 +62,20 @@ def _complete_composition_log(request, composition_log):
         gender = (
             UserInformation.objects.filter(user=request.user).first().gender
         )
+        units = (
+            UserInformation.objects.filter(user=request.user).first().units
+        )
         composition_log.height = (
             UserInformation.objects.get(user=request.user).height
         )
         composition_log.bodyfat = (
-            services.body_composition(gender, composition_log)['body_fat']
+            services.body_composition(gender, composition_log, units)['body_fat']
         )
         composition_log.lean_mass = (
-            services.body_composition(gender, composition_log)['lean_mass']
+            services.body_composition(gender, composition_log, units)['lean_mass']
         )
         composition_log.fat_mass = (
-            services.body_composition(gender, composition_log)['fat_mass']
+            services.body_composition(gender, composition_log, units)['fat_mass']
         )
 
     except UserInformation.DoesNotExist:
