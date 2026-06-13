@@ -3,6 +3,8 @@
 <div class="system_header large">
     <h1>Nutrition Fitness Tracker</h1>
 </div>
+{% load static %}
+<script type="text/javascript" src="{% static 'scripts/imperial_form_field.js' %}"></script>
 <div class="double_grid_container">
     <div class="generic_forms_container profile"> 
         <h2 class="form_heading_area"> User Information</h2>
@@ -23,6 +25,15 @@
         <form method="POST" action="">
             {% csrf_token %}
             <div class="django_forms">{{update_form.as_p}}</div>
+            <div id="imperialHeightFields" style="display:none">
+                <p>
+                    <label>Height:</label>
+                    <span class="imperial-height-inputs">
+                        <input type="number" step="any" id="heightFeet" placeholder="ft" min="0" max="8"/>
+                        <input type="number" step="any" id="heightInches" placeholder="in" min="0" max="11"/>
+                    </span>
+                </p>
+            </div>
             <input class="button single" type="submit" value="Update"/>
         </form>
     </div>

@@ -49,5 +49,5 @@ class TrainingLogForm(ModelForm):
 class UserInformationForm(ModelForm):
     class Meta:
         model = models.UserInformation
-        fields = ['units', 'height', 'age', 'gender']
+        fields = ['units', 'age', 'gender', 'height']
 

@@ -145,15 +145,6 @@ nav.hidden { transform: translateX(-100%); }
 .django_forms label { margin: 1.5em 0em 1em 0em; display: inline-block; font-weight: 600; font-size: 1.125em;}
 .django_forms .helptext{display: inline-block; margin-top: 1em;}
 
-.django_forms.add p:nth-of-type(2) label:first-child::after {
-    content: "Enter your height in inches if you select imperial units. \A Enter your height in cm if you select metric units.";
-    display: block;
-    font-size: 0.85em;   /* optional styling */
-    margin-top: 0.66em;     /* optional spacing */
-    font-weight: 400;
-    line-height: 1.5;
-    white-space: pre-line;
-}
 
 .django_forms.add p:first-of-type label:first-child::after {
     content: "Imperial (Recommended): Weight in Lbs, Height in Inches.\A Metric: Weight in Kg, Height in cm";
@@ -710,4 +701,28 @@ select:focus {
 .pop_content p {
     font-size: 0.8em;
     font-weight: 500;
+}
+
+
+
+
+#imperialHeightFields{
+    margin-bottom: -0.5em;
+}
+
+#imperialHeightFields p {
+    margin-bottom: 0.5em;
+    margin-top: 1.66em;
+}
+
+#imperialHeightFields label {
+    display: block;
+    font-weight: 600;
+    font-size: 1.125em;
+    margin-bottom: 1.025em;
+}
+
+.imperial-height-inputs {
+    display: flex;
+    gap: 0.5em;
 }
