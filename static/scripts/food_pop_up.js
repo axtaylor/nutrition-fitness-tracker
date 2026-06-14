@@ -76,11 +76,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // -------------------------------------------------------------------------
     // Food search
     // -------------------------------------------------------------------------
+    /*
     document.getElementById('foodSearchBtn').addEventListener('click', searchFoods);
     document.getElementById('foodSearchInput').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') { e.preventDefault(); searchFoods(); }
-    });
-
+    });*/
+    /*
     function searchFoods() {
         const query = document.getElementById('foodSearchInput').value.trim();
         const resultsDiv = document.getElementById('searchResults');
@@ -106,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 `).join('');
             })
             .catch(() => resultsDiv.innerHTML = '<p style="color:#c00; font-size:0.9em;">Search failed. Try again.</p>');
-    }
+    }*/
 
     // -------------------------------------------------------------------------
     // Helpers
@@ -225,10 +226,9 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     window.selectSavedFood = function (index) {
-        appendFoodItem(_savedFoods[index]);
+        appendFoodItem(window._renderedFoods[index]);
         closeModal();
     };
-
     // -------------------------------------------------------------------------
     // Restore saved food items on edit
     // -------------------------------------------------------------------------
@@ -255,6 +255,8 @@ document.addEventListener('DOMContentLoaded', function () {
             container.innerHTML = '<p style="color:#656565; font-size:0.9em;">No matching foods.</p>';
             return;
         }
+        // Store the currently rendered list so selectSavedFood indexes into it correctly
+        window._renderedFoods = foods;
         container.innerHTML = foods.map((food, i) => `
             <div class="my-food-item">
                 <div>
