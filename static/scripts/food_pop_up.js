@@ -204,8 +204,8 @@ document.addEventListener('DOMContentLoaded', function () {
         let protein_pct = ((totals.protein*4)/totals.calories)*100;
         let fat_pct = ((totals.fat*9)/totals.calories)*100;
         let carb_pct = ((totals.carbs*4)/totals.calories)*100;
-        let extra = 100-(protein_pct+fat_pct+carb_pct);
-        fat_pct+=extra;
+        //let extra = 100-(protein_pct+fat_pct+carb_pct);
+        //fat_pct+=extra;
 
         document.getElementById('totalCalories').textContent = totals.calories.toFixed(1);
         document.getElementById('totalProtein').textContent  = totals.protein.toFixed(1)  + 'g'
