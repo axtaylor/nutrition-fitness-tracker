@@ -49,7 +49,7 @@ def body_composition(gender_input, composition_data, units) -> dict[float, float
                 float(composition_data.height)*multiplier
                 )
                 +36.76
-            )
+            ) + 4 # SUBJECTIVE!!!!!!!!!!!!!!!
         else: # Female body fat percentage
             bf = (
                 163.205*math.log10(
