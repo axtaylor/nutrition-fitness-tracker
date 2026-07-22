@@ -6,7 +6,7 @@
 
 
 {% load static %}
-<script type="text/javascript" src="{% static 'scripts/home_pop_up.js' %}"></script>
+<script type="text/javascript" src="{% static 'scripts/homeGuestModal.js' %}"></script>
 {{ user|json_script:"guest_check" }}
 
 {% if not has_user_profile %}

@@ -4,7 +4,7 @@
 <div class="system_header large">
     <h1>Nutrition Fitness Tracker</h1>
 </div>
-<script type="text/javascript" src="{% static 'scripts/pop_up.js' %}"></script>
+<script type="text/javascript" src="{% static 'scripts/logbookInfoModal.js' %}"></script>
 {{ log_info|json_script:"log_info" }}
 <div class="container">
     <form class="generic_forms_container" method="POST" action="">
@@ -31,7 +31,7 @@
         <hr>
 
         {% if log_info == "nutritionlog" %}
-        <script type="text/javascript" src="{% static 'scripts/food_pop_up.js' %}"></script>
+        <script type="text/javascript" src="{% static 'scripts/nutritionLogModal.js' %}"></script>
 
     
         <div class="add-food">

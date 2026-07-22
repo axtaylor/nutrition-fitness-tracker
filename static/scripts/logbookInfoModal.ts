@@ -1,8 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const id = JSON.parse(document.getElementById("log_info").textContent);
+
+    const idElement = document.getElementById("log_info");
+    if (!idElement) return;
+
+    const id = JSON.parse(idElement.textContent);
+
     let modelHTML = ``;
 
-    if (id == "weightlog"){
+    if (id === "weightlog"){
 
         modelHTML = `
         <div id="helpmodel" class="model_pop">
@@ -20,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
         
     }
-    else if (id == "nutritionlog") {
+    else if (id === "nutritionlog") {
 
         modelHTML = `
         <div id="helpmodel" class="model_pop">
@@ -39,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
 
     }
-    else if (id == "compositionlog") {
+    else if (id === "compositionlog") {
 
         modelHTML = `
         <div id="helpmodel" class="model_pop">
@@ -57,7 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     }
     else {
-
         modelHTML = `
         <div id="helpmodel" class="model_pop">
             <div class="model-content">
@@ -69,22 +73,29 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
 
     }
+
     document.body.insertAdjacentHTML('beforeend', modelHTML);
-    const help_button = document.querySelector(".button.circle_button");
-    const model = document.getElementById("helpmodel");
-    const close_button = model.querySelector(".close_button");
-    if (help_button) {
-        help_button.addEventListener("click", function (e) {
+
+    const toggleButton = document.querySelector(".button.circle_button");
+    if (!toggleButton) return;
+    const activeModal = document.getElementById("helpmodel");
+    if (!activeModal) return;
+    const closeButton = activeModal.querySelector(".close_button");
+    if (!closeButton) return;
+
+    toggleButton.addEventListener("click", function (e) {
             e.preventDefault(); 
-            model.style.display = "block";
-        });
-    }
-    close_button.addEventListener("click", function () {
-        model.style.display = "none";
+            activeModal.style.display = "block";
     });
+
+    closeButton.addEventListener("click", function () {
+        activeModal.style.display = "none";
+    });
+
     window.addEventListener("click", function (e) {
-        if (e.target === model) {
-            model.style.display = "none";
+        if (e.target === activeModal) {
+            activeModal.style.display = "none";
         }
     });
+
 });
