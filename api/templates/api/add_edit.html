@@ -31,7 +31,8 @@
         <hr>
 
         {% if log_info == "nutritionlog" %}
-        <script type="text/javascript" src="{% static 'scripts/nutritionLogModal.js' %}"></script>
+        <script type="module" src="{% static 'scripts/nutritionLogModal.js' %}"></script>
+        <script type="module" src="{% static 'scripts/globalNutritionData.js' %}"></script>
 
     
         <div class="add-food">
